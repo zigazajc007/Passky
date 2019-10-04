@@ -1,0 +1,16 @@
+name: Passky
+version: ${project.version}
+main: com.rabbitcomapny.Passky
+api-version: 1.13
+authors: [RabbitCompany]
+description: Fastest login plugin
+commands:
+  login:
+    usage: /<command>
+    description: Login to your minecraft account
+  register:
+    usage: /<command>
+    description: Register to your minecraft account
+  changepass:
+    usage: /<command>
+    description: Change password for your minecraft account

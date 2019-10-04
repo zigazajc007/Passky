@@ -1,0 +1,12 @@
+#       ------------ + Passky by Ziga Zajc + ------------   #
+#                                                           #
+#                             Config                        #
+#                                                           #
+#       --------- + ------------------------- + ---------   #
+#
+# Here you can change which encoder will your server use. You can use: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512 or null - for no encoder
+encoder: "SHA-256"
+# Minimum characters for password
+min_password_length: 5
+# Maximum characters for password
+max_password_length: 50

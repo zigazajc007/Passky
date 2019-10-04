@@ -1,0 +1,56 @@
+#       ------------ + Passky by Ziga Zajc + ------------   #
+#                                                           #
+#                           Messages                        #
+#                                                           #
+#       --------- + ------------------------- + ---------   #
+#
+#       You can use chat colors:
+#                ________________________
+#               |   code: | color:       |
+#               |________________________|
+#               |     &0  |	Black	     |
+#               |     &1  |	Dark Blue	 |
+#               |     &2  |	Dark Green	 |
+#               |     &3  |	Dark Aqua	 |
+#               |     &4  |	Dark Red	 |
+#               |     &5  |	Dark Purple	 |
+#               |     &6  |	Gold	     |
+#               |     &7  |	Gray	     |
+#               |     &8  |	Dark Gray	 |
+#               |     &9  |	Blue	     |
+#               |     &a  |	Green	     |
+#               |     &b  |	Aqua	     |
+#               |     &c  |	Red	         |
+#               |     &d  |	Light Purple |
+#               |     &e  |	Yellow	     |
+#               |     &f  |	White	     |
+#               |     &k  |	Obfuscated	 |
+#               |     &l  |	Bold	     |
+#               |     &m  |	Strikethrough|
+#               |     &n  |	Underline	 |
+#               |     &o  |	Italic	     |
+#               |     &r  |	Reset	     |
+#               |________________________|
+#
+#----------------------------------------------------------
+#                         Prefix
+#----------------------------------------------------------
+prefix: "&7[&aPassky&7] "
+#----------------------------------------------------------
+#                       Register
+#----------------------------------------------------------
+register_successfully: "&2Register successfully!"
+register_too_short: "&cPassword is too short!"
+register_too_long: "&cPassword is too long!"
+register_doesnt_match: "&cPassword doesn't match!"
+register_already: "&cYou are already registered!"
+register_account_already: "&cYour account is already registered. Please use /login <password>"
+register_syntax: "&cPlease use: /register <password> <password>"
+#----------------------------------------------------------
+#                        Login
+#----------------------------------------------------------
+login_successfully: "&2Login successfully!"
+login_incorrect: "&cPassword is incorrect!"
+login_register: "&cYou need to register first!"
+login_already: "&cYou are already logged in!"
+login_syntax: "&cPlease use: /login <password>"
