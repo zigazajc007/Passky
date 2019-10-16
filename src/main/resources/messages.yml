@@ -39,7 +39,7 @@ prefix: "&7[&aPassky&7] "
 #----------------------------------------------------------
 #                       Register
 #----------------------------------------------------------
-register_successfully: "&2Register successfully!"
+register_successfully: "&2Registered successfully!"
 register_too_short: "&cPassword is too short!"
 register_too_long: "&cPassword is too long!"
 register_doesnt_match: "&cPassword doesn't match!"
@@ -49,7 +49,7 @@ register_syntax: "&cPlease use: /register <password> <password>"
 #----------------------------------------------------------
 #                        Login
 #----------------------------------------------------------
-login_successfully: "&2Login successfully!"
+login_successfully: "&2Logged in successfully!"
 login_incorrect: "&cPassword is incorrect!"
 login_register: "&cYou need to register first!"
 login_already: "&cYou are already logged in!"
