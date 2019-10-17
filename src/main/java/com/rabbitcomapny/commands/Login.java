@@ -29,7 +29,6 @@ public class Login implements CommandExecutor {
                         player.removePotionEffect(PotionEffectType.BLINDNESS);
                         player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
                         if(Passky.damage.getOrDefault(player, 0D) > 0D){
-                            Bukkit.getServer().getConsoleSender().sendMessage("Damage: " + Passky.damage.get(player));
                             player.damage(Passky.damage.get(player));
                         }
                     } else {
