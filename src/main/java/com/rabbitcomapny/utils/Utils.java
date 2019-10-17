@@ -2,6 +2,7 @@ package com.rabbitcomapny.utils;
 
 import com.rabbitcomapny.Passky;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -24,6 +25,8 @@ public class Utils {
     public static String getPassword(String config){
         return chat(Passky.getInstance().getPass().getString(config));
     }
+
+    public static void kickPlayer(Player player, String reason) { player.kickPlayer(chat(reason)); }
 
     public static String getHash(String password, String algorithm){
         MessageDigest digest = null;

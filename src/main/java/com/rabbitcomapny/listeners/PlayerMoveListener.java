@@ -19,7 +19,9 @@ public class PlayerMoveListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e){
         if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
-            e.setCancelled(true);
+            if(e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()){
+                e.setCancelled(true);
+            }
         }
     }
 

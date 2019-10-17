@@ -1,25 +1,26 @@
 package com.rabbitcomapny;
-
+import com.rabbitcomapny.commands.Changepass;
 import com.rabbitcomapny.commands.Login;
 import com.rabbitcomapny.commands.Register;
 import com.rabbitcomapny.listeners.*;
 import com.rabbitcomapny.utils.Utils;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-
 public final class Passky extends JavaPlugin {
 
     private static Passky instance;
-    public static HashMap<Player, Boolean> isLoggedIn = new HashMap<>();
+
+    public static HashMap<Player, Boolean> isLoggedIn = new HashMap();
+    public static HashMap<Player, Integer> failures = new HashMap();
+    public static HashMap<Player, Double> damage = new HashMap<>();
 
     private File c = null;
     private YamlConfiguration conf = new YamlConfiguration();
@@ -30,7 +31,7 @@ public final class Passky extends JavaPlugin {
     private File p = null;
     private YamlConfiguration pass = new YamlConfiguration();
 
-    @Override
+
     public void onEnable() {
         instance = this;
 
@@ -43,14 +44,14 @@ public final class Passky extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &aPlugin is enabled!"));
 
-        //Commands
-        this.getCommand("login").setExecutor((CommandExecutor) new Login());
-        this.getCommand("register").setExecutor((CommandExecutor) new Register());
+        getCommand("login").setExecutor(new Login());
+        getCommand("register").setExecutor(new Register());
+        getCommand("changepassword").setExecutor(new Changepass());
 
-        //Listeners
         new PlayerJoinListener(this);
         new PlayerMoveListener(this);
         new PlayerDropItemListener(this);
+        new PlayerPickUpItemListener(this);
         new InventoryOpenListener(this);
         new PlayerChatListener(this);
         new PlayerCommandListener(this);
@@ -60,12 +61,9 @@ public final class Passky extends JavaPlugin {
         new BlockBreakListener(this);
     }
 
-    @Override
-    public void onDisable() {
-        Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!"));
-    }
+    public void onDisable() { Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!")); }
 
-    private void mkdir(){
+    private void mkdir() {
         if (!this.c.exists()) {
             saveResource("config.yml", false);
         }
@@ -79,8 +77,7 @@ public final class Passky extends JavaPlugin {
         }
     }
 
-    private void loadYamls(){
-
+    private void loadYamls() {
         try {
             this.conf.load(this.c);
         } catch (FileNotFoundException e) {
@@ -140,7 +137,5 @@ public final class Passky extends JavaPlugin {
         }
     }
 
-    public static Passky getInstance(){
-        return instance;
-    }
+    public static Passky getInstance() { return instance; }
 }

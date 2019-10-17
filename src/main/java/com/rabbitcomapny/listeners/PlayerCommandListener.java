@@ -20,7 +20,7 @@ public class PlayerCommandListener implements Listener {
     @EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent e){
         if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
-            if(!e.getMessage().toLowerCase().startsWith("/login") && !e.getMessage().toLowerCase().startsWith("/register")){
+            if(!e.getMessage().toLowerCase().startsWith("/login") && !e.getMessage().toLowerCase().startsWith("/register") && !e.getMessage().toLowerCase().startsWith("/log") && !e.getMessage().toLowerCase().startsWith("/reg") && !e.getMessage().toLowerCase().startsWith("/l") && !e.getMessage().toLowerCase().startsWith("/r")){
                 e.setCancelled(true);
                 if(!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
                     e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));

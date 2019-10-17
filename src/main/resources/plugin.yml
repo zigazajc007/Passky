@@ -7,10 +7,13 @@ description: Fastest login plugin
 commands:
   login:
     usage: /<command>
+    aliases: [log, l]
     description: Login to your minecraft account
   register:
     usage: /<command>
+    aliases: [reg, r]
     description: Register to your minecraft account
-  changepass:
+  changepassword:
     usage: /<command>
+    aliases: [changepass, cp]
     description: Change password for your minecraft account

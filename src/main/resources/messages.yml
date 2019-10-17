@@ -39,18 +39,31 @@ prefix: "&7[&aPassky&7] "
 #----------------------------------------------------------
 #                       Register
 #----------------------------------------------------------
-register_successfully: "&2Register successfully!"
+register_successfully: "&2Successfuly registered. Auto logging-in!"
 register_too_short: "&cPassword is too short!"
 register_too_long: "&cPassword is too long!"
 register_doesnt_match: "&cPassword doesn't match!"
 register_already: "&cYou are already registered!"
 register_account_already: "&cYour account is already registered. Please use /login <password>"
-register_syntax: "&cPlease use: /register <password> <password>"
+register_syntax: "&cPlease use: /register <pass> <pass>"
 #----------------------------------------------------------
 #                        Login
 #----------------------------------------------------------
-login_successfully: "&2Login successfully!"
-login_incorrect: "&cPassword is incorrect!"
+login_successfully: "&2Successfuly logged-in!"
+login_too_many_attempts: "&cYou entered wrong password too many times!"
+login_time: "&cYou have only {time} seconds to login."
+login_incorrect: "&cYour password is incorrect!"
 login_register: "&cYou need to register first!"
 login_already: "&cYou are already logged in!"
 login_syntax: "&cPlease use: /login <password>"
+#----------------------------------------------------------
+#                   Change password
+#----------------------------------------------------------
+changepass_successfully: "&aYour password has been changed successfully!"
+changepass_register: "&cYou need to register first!"
+changepass_login_first: "&cYou need to be logged in first!"
+changepass_syntax: "&cTo change your password you have to use: /cp <password> <newPassword>"
+changepass_same: "&cNew password can't be the same as old password!"
+changepass_incorrect: "&cYour password is incorrect!"
+changepass_too_long: "&cNew password is too long!"
+changepass_too_short: "&cNew password is too short!"
