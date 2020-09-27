@@ -2,7 +2,7 @@ name: Passky
 version: ${project.version}
 main: com.rabbitcomapny.Passky
 api-version: 1.13
-authors: [RabbitCompany]
+authors: [RabbitCompany,sandtechnology]
 description: Fastest login plugin
 commands:
   login:
