@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerCommandListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public PlayerCommandListener(Passky plugin){
         passky = plugin;
@@ -18,13 +18,13 @@ public class PlayerCommandListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerCommand(PlayerCommandPreprocessEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
-            if(!e.getMessage().toLowerCase().startsWith("/login") && !e.getMessage().toLowerCase().startsWith("/register") && !e.getMessage().toLowerCase().startsWith("/log") && !e.getMessage().toLowerCase().startsWith("/reg") && !e.getMessage().toLowerCase().startsWith("/l") && !e.getMessage().toLowerCase().startsWith("/r")){
+    public void onPlayerCommand(PlayerCommandPreprocessEvent e) {
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+            if (!e.getMessage().toLowerCase().startsWith("/login") && !e.getMessage().toLowerCase().startsWith("/register") && !e.getMessage().toLowerCase().startsWith("/log") && !e.getMessage().toLowerCase().startsWith("/reg") && !e.getMessage().toLowerCase().startsWith("/l") && !e.getMessage().toLowerCase().startsWith("/r")) {
                 e.setCancelled(true);
-                if(!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
+                if (!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
                     e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
-                }else{
+                } else {
                     e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));
                 }
             }

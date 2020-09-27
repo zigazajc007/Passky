@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreakListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public BlockBreakListener(Passky plugin){
         passky = plugin;
@@ -18,7 +18,7 @@ public class BlockBreakListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
         }
     }

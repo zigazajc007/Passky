@@ -1,26 +1,25 @@
 package com.rabbitcomapny;
-import com.rabbitcomapny.commands.Changepass;
-import com.rabbitcomapny.commands.Login;
-import com.rabbitcomapny.commands.Register;
+
+import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
 import com.rabbitcomapny.utils.Utils;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class Passky extends JavaPlugin {
 
     private static Passky instance;
 
-    public static HashMap<Player, Boolean> isLoggedIn = new HashMap<>();
-    public static HashMap<Player, Integer> failures = new HashMap<>();
-    public static HashMap<Player, Double> damage = new HashMap<>();
+    public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
+    public static HashMap<UUID, Integer> failures = new HashMap<>();
+    public static HashMap<UUID, Double> damage = new HashMap<>();
 
     private File c = null;
     private final YamlConfiguration conf = new YamlConfiguration();
@@ -39,14 +38,17 @@ public final class Passky extends JavaPlugin {
         this.m = new File(getDataFolder(), "messages.yml");
         this.p = new File(getDataFolder(), "passwords.yml");
 
-        mkdir();
-        loadYamls();
+        mkdirAndLoad(c, conf);
+        mkdirAndLoad(m, mess);
+        mkdirAndLoad(p, pass);
 
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &aPlugin is enabled!"));
 
         getCommand("login").setExecutor(new Login());
         getCommand("register").setExecutor(new Register());
         getCommand("changepassword").setExecutor(new Changepass());
+        getCommand("forcechangepassword").setExecutor(new ForceChangePassword());
+        getCommand("forceregister").setExecutor(new ForceRegister());
 
         new PlayerJoinListener(this);
         new PlayerMoveListener(this);
@@ -61,45 +63,35 @@ public final class Passky extends JavaPlugin {
         new BlockBreakListener(this);
     }
 
-    public void onDisable() { Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!")); }
-
-    private void mkdir() {
-        if (!this.c.exists()) {
-            saveResource("config.yml", false);
-        }
-
-        if (!this.p.exists()) {
-            saveResource("passwords.yml", false);
-        }
-
-        if (!this.m.exists()) {
-            saveResource("messages.yml", false);
-        }
+    public void onDisable() {
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!"));
     }
 
-    private void loadYamls() {
-        try {
-            this.conf.load(this.c);
-        } catch (InvalidConfigurationException | IOException e) {
-            e.printStackTrace();
+    private void mkdirAndLoad(File file, YamlConfiguration conf) {
+        if (!file.exists()) {
+            saveResource(file.getName(), false);
+        } else {
+            Utils.mergeYaml(file.getName(), file);
         }
-
         try {
-            this.pass.load(this.p);
+            conf.load(file);
         } catch (InvalidConfigurationException | IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.mess.load(this.m);
-        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
 
-    public YamlConfiguration getConf() { return this.conf; }
-    public YamlConfiguration getMess() { return this.mess; }
-    public YamlConfiguration getPass() { return this.pass; }
+
+    public YamlConfiguration getConf() {
+        return this.conf;
+    }
+
+    public YamlConfiguration getMess() {
+        return this.mess;
+    }
+
+    public YamlConfiguration getPass() {
+        return this.pass;
+    }
 
     public void saveConf() {
         try {

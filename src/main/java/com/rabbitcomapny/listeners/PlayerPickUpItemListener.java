@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class PlayerPickUpItemListener
         implements Listener {
-    private Passky passky;
+    private final Passky passky;
 
     public PlayerPickUpItemListener(Passky plugin) {
         this.passky = plugin;
@@ -18,7 +18,7 @@ public class PlayerPickUpItemListener
 
     @EventHandler
     public void onPlayerPickUpItem(PlayerPickupItemEvent e) {
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false))
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false))
             e.setCancelled(true);
     }
 }

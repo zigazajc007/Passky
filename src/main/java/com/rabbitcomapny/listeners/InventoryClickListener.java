@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class InventoryClickListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public InventoryClickListener(Passky plugin){
         passky = plugin;
@@ -18,7 +18,7 @@ public class InventoryClickListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getWhoClicked(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getWhoClicked().getUniqueId(), false)) {
             e.setCancelled(true);
         }
     }

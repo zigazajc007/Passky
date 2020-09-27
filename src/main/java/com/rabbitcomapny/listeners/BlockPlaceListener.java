@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockPlaceListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public BlockPlaceListener(Passky plugin){
         passky = plugin;
@@ -18,7 +18,7 @@ public class BlockPlaceListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
         }
     }

@@ -9,7 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerChatListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public PlayerChatListener(Passky plugin){
         passky = plugin;
@@ -19,12 +19,12 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
 
-            if(!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
+            if (!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
-            }else{
+            } else {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));
             }
         }

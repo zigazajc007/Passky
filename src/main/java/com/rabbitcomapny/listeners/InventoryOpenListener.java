@@ -2,14 +2,13 @@ package com.rabbitcomapny.listeners;
 
 import com.rabbitcomapny.Passky;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class InventoryOpenListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public InventoryOpenListener(Passky plugin){
         passky = plugin;
@@ -19,7 +18,7 @@ public class InventoryOpenListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
         }
     }
