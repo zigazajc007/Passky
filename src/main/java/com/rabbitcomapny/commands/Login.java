@@ -21,19 +21,21 @@ public class Login implements CommandExecutor {
 
         Player player = (Player)sender;
 
-        if (Passky.getInstance().getPass().contains(player.getName())) {
+        String password=Passky.getInstance().getPass().getString(player.getName());
+        if (password!=null) {
             if (!Passky.isLoggedIn.getOrDefault(player, false)) {
                 if (args.length == 1) {
-                    if (Passky.getInstance().getPass().get(player.getName()).equals(Utils.getHash(args[0], Utils.getConfig("encoder")))) {
+                    if (password.equals(Utils.getHash(args[0], Utils.getConfig("encoder")))) {
                         Passky.isLoggedIn.put(player, true);
                         player.removePotionEffect(PotionEffectType.BLINDNESS);
                         player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
-                        if(Passky.damage.getOrDefault(player, 0D) > 0D){
-                            player.damage(Passky.damage.get(player));
+                        double damage=Passky.damage.getOrDefault(player, 0D);
+                        if(damage > 0D){
+                            player.damage(damage);
                         }
                     } else {
-                        Passky.failures.put(player, Passky.failures.getOrDefault(player, 0) + 1);
-                        if (Passky.failures.get(player) >= Passky.getInstance().getConf().getInt("attempts")) {
+                        int attempts=Passky.failures.merge(player,1, Integer::sum);
+                        if (attempts >= Passky.getInstance().getConf().getInt("attempts")) {
                             Passky.failures.put(player, 0);
                             player.kickPlayer(Utils.getMessages("prefix") + Utils.getMessages("login_too_many_attempts"));
                         }

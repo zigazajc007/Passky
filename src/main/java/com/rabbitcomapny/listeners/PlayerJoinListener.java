@@ -59,11 +59,9 @@ public class PlayerJoinListener implements Listener {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));
             }
 
-            Bukkit.getScheduler().runTaskLater(Passky.getInstance(), new Runnable() {
-                public void run() {
-                    if (!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false) && e.getPlayer().isOnline()) {
-                        Utils.kickPlayer(e.getPlayer(), Utils.getMessages("prefix") + Utils.getMessages("login_time").replace("{time}", Utils.getConfig("time_before_kick")));
-                    }
+            Bukkit.getScheduler().runTaskLater(Passky.getInstance(), () -> {
+                if (!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false) && e.getPlayer().isOnline()) {
+                    Utils.kickPlayer(e.getPlayer(), Utils.getMessages("prefix") + Utils.getMessages("login_time").replace("{time}", Utils.getConfig("time_before_kick")));
                 }
             }, Passky.getInstance().getConf().getInt("time_before_kick") * 20);
         }

@@ -18,18 +18,18 @@ public final class Passky extends JavaPlugin {
 
     private static Passky instance;
 
-    public static HashMap<Player, Boolean> isLoggedIn = new HashMap();
-    public static HashMap<Player, Integer> failures = new HashMap();
+    public static HashMap<Player, Boolean> isLoggedIn = new HashMap<>();
+    public static HashMap<Player, Integer> failures = new HashMap<>();
     public static HashMap<Player, Double> damage = new HashMap<>();
 
     private File c = null;
-    private YamlConfiguration conf = new YamlConfiguration();
+    private final YamlConfiguration conf = new YamlConfiguration();
 
     private File m = null;
-    private YamlConfiguration mess = new YamlConfiguration();
+    private final YamlConfiguration mess = new YamlConfiguration();
 
     private File p = null;
-    private YamlConfiguration pass = new YamlConfiguration();
+    private final YamlConfiguration pass = new YamlConfiguration();
 
 
     public void onEnable() {
@@ -80,31 +80,19 @@ public final class Passky extends JavaPlugin {
     private void loadYamls() {
         try {
             this.conf.load(this.c);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
 
         try {
             this.pass.load(this.p);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
 
         try {
             this.mess.load(this.m);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }

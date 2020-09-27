@@ -29,8 +29,9 @@ public class Register implements CommandExecutor {
                                 Passky.isLoggedIn.put(player, true);
                                 player.removePotionEffect(PotionEffectType.BLINDNESS);
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
-                                if(Passky.damage.getOrDefault(player, 0D) > 0D){
-                                    player.damage(Passky.damage.get(player));
+                                double damage=Passky.damage.getOrDefault(player, 0D);
+                                if(damage > 0D){
+                                    player.damage(damage);
                                 }
                             } else {
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_too_short"));
