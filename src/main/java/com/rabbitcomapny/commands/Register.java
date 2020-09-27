@@ -3,34 +3,34 @@ package com.rabbitcomapny.commands;
 import com.rabbitcomapny.Passky;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 
-public class Register implements CommandExecutor {
+public class Register implements ICommand {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             return true;
         }
 
-        Player player = (Player)sender;
+        Player player = (Player) sender;
 
         if (!Passky.getInstance().getPass().contains(player.getName())) {
-            if (!Passky.isLoggedIn.getOrDefault(player, false)) {
+            if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
                 if (args.length == 2) {
                     if (args[0].equals(args[1])) {
                         if (args[0].length() <= Integer.parseInt(Utils.getConfig("max_password_length"))) {
                             if (args[0].length() >= Integer.parseInt(Utils.getConfig("min_password_length"))) {
                                 Passky.getInstance().getPass().set(player.getName(), Utils.getHash(args[0], Utils.getConfig("encoder")));
                                 Passky.getInstance().savePass();
-                                Passky.isLoggedIn.put(player, true);
+                                Passky.isLoggedIn.put(player.getUniqueId(), true);
                                 player.removePotionEffect(PotionEffectType.BLINDNESS);
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
-                                if(Passky.damage.getOrDefault(player, 0D) > 0D){
-                                    player.damage(Passky.damage.get(player));
+                                double damage = Passky.damage.getOrDefault(player.getUniqueId(), 0D);
+                                if(damage > 0D){
+                                    player.damage(damage);
                                 }
                             } else {
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_too_short"));

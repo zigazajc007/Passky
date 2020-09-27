@@ -7,13 +7,30 @@ description: Fastest login plugin
 commands:
   login:
     usage: /<command>
-    aliases: [log, l]
+    aliases: [ log, l ]
     description: Login to your minecraft account
   register:
     usage: /<command>
-    aliases: [reg, r]
+    aliases: [ reg, r ]
     description: Register to your minecraft account
   changepassword:
     usage: /<command>
-    aliases: [changepass, cp]
+    aliases: [ changepass, cp ]
     description: Change password for your minecraft account
+  forcechangepassword:
+    usage: /<command>
+    aliases: [ forcechangepass,fcp, fp ]
+    permission: passky.forcechangepassword
+    description: Forced change password for an player minecraft account
+  forceregister:
+    usage: /<command>
+    aliases: [ forceregister,fr ]
+    permission: passky.forceregister
+    description: Forced register for an player minecraft account
+permissions:
+  passky.forcechangepassword:
+    default: op
+    description: Allow to use forcechangepassword command
+  passky.forceregister:
+    default: op
+    description: Allow to use forceregister command

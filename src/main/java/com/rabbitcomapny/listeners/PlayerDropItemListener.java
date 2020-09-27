@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class PlayerDropItemListener implements Listener {
 
-    private Passky passky;
+    private final Passky passky;
 
     public PlayerDropItemListener(Passky plugin){
         passky = plugin;
@@ -18,7 +18,7 @@ public class PlayerDropItemListener implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e){
-        if(!Passky.isLoggedIn.getOrDefault(e.getPlayer(), false)){
+        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
         }
     }

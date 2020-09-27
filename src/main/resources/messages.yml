@@ -67,3 +67,16 @@ changepass_same: "&cNew password can't be the same as old password!"
 changepass_incorrect: "&cYour password is incorrect!"
 changepass_too_long: "&cNew password is too long!"
 changepass_too_short: "&cNew password is too short!"
+#----------------------------------------------------------
+#                Force change password
+#----------------------------------------------------------
+force_changepass_successfully: "&2Player password has been changed successfully!"
+force_changepass_register: "&cPlayer need to register first!"
+force_changepass_syntax: "&cTo change an player password you have to use: /fcp <playerName> <newPassword>"
+force_changepass_notice: "&cPassword was changed, please re-login."
+#----------------------------------------------------------
+#                   Force register
+#----------------------------------------------------------
+force_register_successfully: "&2Successfuly registered."
+force_register_already: "&cPlayer are already registered! Please use /fcp <playerName> <newPassword> to change password!"
+force_register_syntax: "&cPlease use: /fr <playerName> <pass>"

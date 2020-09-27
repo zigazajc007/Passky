@@ -14,3 +14,6 @@ time_before_kick: 30
 min_password_length: 4
 # Maximum characters for password
 max_password_length: 32
+# Hiding the command log of the plugin command in console?
+# It will protect password
+hide_password: true
