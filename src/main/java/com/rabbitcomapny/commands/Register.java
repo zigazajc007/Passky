@@ -1,6 +1,7 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,8 +30,10 @@ public class Register implements ICommand {
                                 player.removePotionEffect(PotionEffectType.BLINDNESS);
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
                                 double damage = Passky.damage.getOrDefault(player.getUniqueId(), 0D);
-                                if(damage > 0D){
-                                    player.damage(damage);
+                                if(damage > 0D) player.damage(damage);
+                                if(Passky.getInstance().getConf().getBoolean("session_enabled", false)){
+                                    if(player.getAddress() != null && player.getAddress().getAddress() != null)
+                                        Passky.session.put(player.getUniqueId(), new Session(player.getAddress().getAddress().toString().replace("/", ""), System.currentTimeMillis()));
                                 }
                             } else {
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_too_short"));

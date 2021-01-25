@@ -14,6 +14,12 @@ time_before_kick: 30
 min_password_length: 4
 # Maximum characters for password
 max_password_length: 32
+# Don't allow players with illegal usernames to join your server
+kick_illegal_usernames: true
 # Hiding the command log of the plugin command in console?
 # It will protect password
 hide_password: true
+# If you enable session, player won't need to log in every time he enters this server (Awesome feature for Bungeecord servers)
+session_enabled: false
+# How many minutes do you want session to last?
+session_time: 30

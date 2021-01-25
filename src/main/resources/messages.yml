@@ -80,3 +80,7 @@ force_changepass_notice: "&cPassword was changed, please re-login."
 force_register_successfully: "&2Successfuly registered."
 force_register_already: "&cPlayer are already registered! Please use /fcp <playerName> <newPassword> to change password!"
 force_register_syntax: "&cPlease use: /fr <playerName> <pass>"
+#----------------------------------------------------------
+#                   Illegal username
+#----------------------------------------------------------
+illegal_username_kick: "&cYour username contains illegal characters!\nYou are only allowed to use characters from A-Z, 0-9 and _\nAlso make sure that you username is between 3-16 characters long."

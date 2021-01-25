@@ -44,9 +44,7 @@ public class ForceRegister implements ICommand {
                 p.removePotionEffect(PotionEffectType.BLINDNESS);
                 p.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
                 double damage = Passky.damage.getOrDefault(p.getUniqueId(), 0D);
-                if (damage > 0D) {
-                    p.damage(damage);
-                }
+                if (damage > 0D) p.damage(damage);
                 break;
             }
         }

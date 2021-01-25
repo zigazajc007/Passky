@@ -2,6 +2,8 @@ package com.rabbitcomapny.utils;
 
 import com.rabbitcomapny.Passky;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -44,6 +46,26 @@ public class Utils {
         }
     }
 
+    public static void damagePlayerWithHeight(Player player){
+        int height = 0;
+
+        Location loc = player.getLocation();
+
+        while (loc.getBlock().getType() == Material.AIR || loc.getBlock().getType() == Material.LADDER) {
+            loc.setY(loc.getBlockY() - 1);
+
+            if (loc.getBlock().getType() == Material.WATER || loc.getBlock().getType() == Material.LADDER || loc.getBlock().getType() == Material.SLIME_BLOCK || loc.getBlock().getType() == Material.LAVA) {
+                height = 0;
+            }else{
+                height++;
+            }
+        }
+
+        player.teleport(loc.add(0,1,0));
+
+        Passky.damage.put(player.getUniqueId(), height * 0.5D - 1.5D);
+    }
+
     public static void mergeYaml(String origin, File old) {
         InputStream stream = Passky.getInstance().getResource(origin);
         if (stream != null) {
@@ -71,12 +93,5 @@ public class Utils {
             hexString.append(hex);
         }
         return hexString.toString();
-    }
-
-    public static boolean sendMessageIfNot(CommandSender sender, boolean bool, String message) {
-        if (!bool) {
-            sender.sendMessage(message);
-        }
-        return bool;
     }
 }

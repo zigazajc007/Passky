@@ -2,6 +2,7 @@ package com.rabbitcomapny;
 
 import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
+import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +28,7 @@ public final class Passky extends JavaPlugin {
     public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
     public static HashMap<UUID, Integer> failures = new HashMap<>();
     public static HashMap<UUID, Double> damage = new HashMap<>();
+    public static HashMap<UUID, Session> session = new HashMap<>();
 
     private File c = null;
     private final YamlConfiguration conf = new YamlConfiguration();
@@ -234,7 +236,7 @@ public final class Passky extends JavaPlugin {
         if (!file.exists()) {
             saveResource(file.getName(), false);
         } else {
-            Utils.mergeYaml(file.getName(), file);
+            //Utils.mergeYaml(file.getName(), file);
         }
         try {
             conf.load(file);
