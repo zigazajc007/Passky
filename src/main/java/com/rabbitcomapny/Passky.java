@@ -4,6 +4,7 @@ import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
@@ -19,11 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 public final class Passky extends JavaPlugin {
 
     private static Passky instance;
+
+    //Database
+    public static HikariDataSource hikari;
+    public static Connection conn = null;
 
     public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
     public static HashMap<UUID, Integer> failures = new HashMap<>();
@@ -43,6 +50,11 @@ public final class Passky extends JavaPlugin {
     private static org.apache.logging.log4j.core.Filter passwordFilter;
 
     public void onDisable() {
+        if(conn != null){
+            try {
+                conn.close();
+            } catch (SQLException ignored) { }
+        }
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!"));
     }
 
@@ -59,6 +71,11 @@ public final class Passky extends JavaPlugin {
 
         if (conf.getBoolean("hide_password", true)) {
             setupPasswordFilter();
+        }
+
+        //Database connection
+        if(getConf().getBoolean("mysql", false)){
+            setupMySQL();
         }
 
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &aPlugin is enabled!"));
@@ -245,6 +262,25 @@ public final class Passky extends JavaPlugin {
         }
     }
 
+    private void setupMySQL(){
+        try {
+            hikari = new HikariDataSource();
+            hikari.setMaximumPoolSize(10);
+            hikari.setJdbcUrl("jdbc:mysql://" + getConf().getString("mysql_host") + ":" + getConf().getString("mysql_port") + "/" + getConf().getString("mysql_database"));
+            hikari.setUsername(getConf().getString("mysql_user"));
+            hikari.setPassword(getConf().getString("mysql_password"));
+            hikari.addDataSourceProperty("useSSL", getConf().getString("mysql_useSSL"));
+            hikari.addDataSourceProperty("cachePrepStmts", "true");
+            hikari.addDataSourceProperty("prepStmtCacheSize", "250");
+            hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+            conn = hikari.getConnection();
+            conn.createStatement().execute("CREATE TABLE IF NOT EXISTS passky_players(uuid CHAR(36) NOT NULL PRIMARY KEY, password CHAR(" + getConf().getInt("max_password_length", 32) + ") NOT NULL)");
+            conn.close();
+        } catch (SQLException ignored) {
+            conn = null;
+        }
+    }
 
     public YamlConfiguration getConf() {
         return this.conf;

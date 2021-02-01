@@ -18,8 +18,10 @@ public class ForceChangePassword implements ICommand {
             sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_changepass_syntax"));
             return true;
         }
+        boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+        boolean isPlayerRegistered = usernames && Utils.isPlayerRegistered(args[0]);
         //Register checking
-        if (!Passky.getInstance().getPass().contains(args[0])) {
+        if (!isPlayerRegistered) {
             sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_changepass_register"));
             return true;
         }
@@ -33,8 +35,7 @@ public class ForceChangePassword implements ICommand {
             return true;
         }
         //All passed, do register
-        Passky.getInstance().getPass().set(args[0], Utils.getHash(args[1], Utils.getConfig("encoder")));
-        Passky.getInstance().savePass();
+        Utils.savePassword(args[0], args[1]);
         //Do online player checking and kick player
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.getName().equals(args[0])) {

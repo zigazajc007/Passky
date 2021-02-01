@@ -18,14 +18,22 @@ public class Register implements ICommand {
 
         Player player = (Player) sender;
 
-        if (!Passky.getInstance().getPass().contains(player.getName())) {
+        boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+        boolean isPlayerRegistered = (usernames) ? Utils.isPlayerRegistered(player.getName()) : Utils.isPlayerRegistered(player.getUniqueId().toString());
+
+        if (!isPlayerRegistered) {
             if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
                 if (args.length == 2) {
                     if (args[0].equals(args[1])) {
                         if (args[0].length() <= Integer.parseInt(Utils.getConfig("max_password_length"))) {
                             if (args[0].length() >= Integer.parseInt(Utils.getConfig("min_password_length"))) {
-                                Passky.getInstance().getPass().set(player.getName(), Utils.getHash(args[0], Utils.getConfig("encoder")));
-                                Passky.getInstance().savePass();
+
+                                if (usernames) {
+                                    Utils.savePassword(player.getName(), args[0]);
+                                }else{
+                                    Utils.savePassword(player.getUniqueId().toString(), args[0]);
+                                }
+
                                 Passky.isLoggedIn.put(player.getUniqueId(), true);
                                 player.removePotionEffect(PotionEffectType.BLINDNESS);
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));

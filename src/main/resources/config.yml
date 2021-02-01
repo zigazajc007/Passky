@@ -16,6 +16,8 @@ min_password_length: 4
 max_password_length: 32
 # Don't allow players with illegal usernames to join your server
 kick_illegal_usernames: true
+# Do you want players to be identified with usernames (0) or UUIDs (1) (Default is usernames (0))
+player_identifier: 0
 # Hiding the command log of the plugin command in console?
 # It will protect password
 hide_password: true
@@ -23,3 +25,15 @@ hide_password: true
 session_enabled: false
 # How many minutes do you want session to last?
 session_time: 30
+#----------------------------------------------------------
+#   MySQL Database - Recommended for Bungeecord networks
+#----------------------------------------------------------
+# Do you want to use mysql database?
+mysql: false
+# Here are all data for connection to Mysql database. Please create database, user and password by yourself. Do not use root as user, because of security risk!
+mysql_host: "localhost"
+mysql_port: "3306"
+mysql_database: "AdminBans"
+mysql_user: "root"
+mysql_password: ""
+mysql_useSSL: false

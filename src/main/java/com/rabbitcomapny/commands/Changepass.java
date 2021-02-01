@@ -15,7 +15,10 @@ public class Changepass implements ICommand {
         }
 
         Player player = (Player) sender;
-        String password = Passky.getInstance().getPass().getString(player.getName());
+
+        boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+        String password = (usernames) ? Utils.getPassword(player.getName()) : Utils.getPassword(player.getUniqueId().toString());
+
         if (password != null) {
             if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
                 if (args.length == 2) {
@@ -23,8 +26,11 @@ public class Changepass implements ICommand {
                         if (password.equals(Utils.getHash(args[0], Utils.getConfig("encoder")))) {
                             if (args[1].length() <= Integer.parseInt(Utils.getConfig("max_password_length"))) {
                                 if (args[1].length() >= Integer.parseInt(Utils.getConfig("min_password_length"))) {
-                                    Passky.getInstance().getPass().set(player.getName(), Utils.getHash(args[1], Utils.getConfig("encoder")));
-                                    Passky.getInstance().savePass();
+                                    if (usernames) {
+                                        Utils.savePassword(player.getName(), args[0]);
+                                    } else {
+                                        Utils.savePassword(player.getUniqueId().toString(), args[0]);
+                                    }
                                     player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_successfully"));
                                 } else {
                                     player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_short"));

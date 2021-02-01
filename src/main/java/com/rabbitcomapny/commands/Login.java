@@ -18,7 +18,7 @@ public class Login implements ICommand {
 
         Player player = (Player) sender;
 
-        String password = Passky.getInstance().getPass().getString(player.getName());
+        String password = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? Utils.getPassword(player.getName()) : Utils.getPassword(player.getUniqueId().toString());
         if (password != null) {
             if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
                 if (args.length == 1) {

@@ -19,8 +19,10 @@ public class ForceRegister implements ICommand {
             sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_register_syntax"));
             return true;
         }
+        boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+        boolean isPlayerRegistered = usernames && Utils.isPlayerRegistered(args[0]);
         //Register checking
-        if (Passky.getInstance().getPass().contains(args[0])) {
+        if (isPlayerRegistered) {
             sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_register_already"));
             return true;
         }
@@ -34,8 +36,7 @@ public class ForceRegister implements ICommand {
             return true;
         }
         //All passed, changing password
-        Passky.getInstance().getPass().set(args[0], Utils.getHash(args[1], Utils.getConfig("encoder")));
-        Passky.getInstance().savePass();
+        if(usernames) Utils.savePassword(args[0], args[1]);
 
         //Do online player checking and log in automatically
         for (Player p : Bukkit.getOnlinePlayers()) {
