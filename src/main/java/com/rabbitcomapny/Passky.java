@@ -50,12 +50,12 @@ public final class Passky extends JavaPlugin {
     private static org.apache.logging.log4j.core.Filter passwordFilter;
 
     public void onDisable() {
+        info("&4Disabling");
         if(conn != null){
             try {
                 conn.close();
             } catch (SQLException ignored) { }
         }
-        Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &cPlugin is disabled!"));
     }
 
     public void onEnable() {
@@ -78,7 +78,7 @@ public final class Passky extends JavaPlugin {
             setupMySQL();
         }
 
-        Bukkit.getConsoleSender().sendMessage(Utils.chat("&7[&aPassky&7] &aPlugin is enabled!"));
+        info("&aEnabling");
 
         getCommand("login").setExecutor(new Login());
         getCommand("register").setExecutor(new Register());
@@ -280,6 +280,26 @@ public final class Passky extends JavaPlugin {
         } catch (SQLException ignored) {
             conn = null;
         }
+    }
+
+    private void info(String message){
+        Bukkit.getConsoleSender().sendMessage(Utils.chat(""));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8[]==========[" + message + " &aPassky&8]==========[]"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8| &cInformation:"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Name: &bPassky"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Developer: &bBlack1_TV"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Version: &b" + getDescription().getVersion()));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8| &cSupport:"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bCrazy Rabbit#0001"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Mail: &bziga.zajc007@gmail.com"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bhttps://discord.gg/hUNymXX"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8[]=====================================[]"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat(""));
     }
 
     public YamlConfiguration getConf() {
