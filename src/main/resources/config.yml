@@ -22,7 +22,7 @@ player_identifier: 0
 # It will protect password
 hide_password: true
 # If you enable session, player won't need to log in every time he enters this server (Awesome feature for Bungeecord servers)
-session_enabled: false
+session_enabled: true
 # How many minutes do you want session to last?
 session_time: 30
 #----------------------------------------------------------
@@ -33,7 +33,7 @@ mysql: false
 # Here are all data for connection to Mysql database. Please create database, user and password by yourself. Do not use root as user, because of security risk!
 mysql_host: "localhost"
 mysql_port: "3306"
-mysql_database: "AdminBans"
+mysql_database: "Passky"
 mysql_user: "root"
 mysql_password: ""
 mysql_useSSL: false

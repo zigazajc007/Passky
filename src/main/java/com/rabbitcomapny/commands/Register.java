@@ -18,8 +18,8 @@ public class Register implements ICommand {
 
         Player player = (Player) sender;
 
-        boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
-        boolean isPlayerRegistered = (usernames) ? Utils.isPlayerRegistered(player.getName()) : Utils.isPlayerRegistered(player.getUniqueId().toString());
+        String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
+        boolean isPlayerRegistered = Utils.isPlayerRegistered(uuid);
 
         if (!isPlayerRegistered) {
             if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
@@ -28,10 +28,10 @@ public class Register implements ICommand {
                         if (args[0].length() <= Integer.parseInt(Utils.getConfig("max_password_length"))) {
                             if (args[0].length() >= Integer.parseInt(Utils.getConfig("min_password_length"))) {
 
-                                if (usernames) {
-                                    Utils.savePassword(player.getName(), args[0]);
+                                if (player.getAddress() != null && player.getAddress().getAddress() != null) {
+                                    Utils.savePassword(uuid, args[0], player.getAddress().getAddress().toString().replace("/", ""), ""+System.currentTimeMillis());
                                 }else{
-                                    Utils.savePassword(player.getUniqueId().toString(), args[0]);
+                                    Utils.savePassword(uuid, args[0], null, ""+System.currentTimeMillis());
                                 }
 
                                 Passky.isLoggedIn.put(player.getUniqueId(), true);
@@ -41,7 +41,7 @@ public class Register implements ICommand {
                                 if(damage > 0D) player.damage(damage);
                                 if(Passky.getInstance().getConf().getBoolean("session_enabled", false)){
                                     if(player.getAddress() != null && player.getAddress().getAddress() != null)
-                                        Passky.session.put(player.getUniqueId(), new Session(player.getAddress().getAddress().toString().replace("/", ""), System.currentTimeMillis()));
+                                        Utils.setSession(uuid, player.getAddress().getAddress().toString().replace("/", ""));
                                 }
                             } else {
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_too_short"));

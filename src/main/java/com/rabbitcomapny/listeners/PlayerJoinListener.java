@@ -39,9 +39,11 @@ public class PlayerJoinListener implements Listener {
         Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), false);
         Passky.damage.put(e.getPlayer().getUniqueId(), 0D);
 
+        String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? e.getPlayer().getName() : e.getPlayer().getUniqueId().toString();
+
         if(Passky.getInstance().getConf().getBoolean("session_enabled", false)){
-            if(Passky.session.getOrDefault(e.getPlayer().getUniqueId(), null) != null){
-                Session session = Passky.session.get(e.getPlayer().getUniqueId());
+            Session session = Utils.getSession(uuid);
+            if(session != null){
                 if(e.getPlayer().getAddress() != null && e.getPlayer().getAddress().getAddress() != null){
                     if(session.ip.equals(e.getPlayer().getAddress().getAddress().toString().replace("/", "")) && (session.date + Passky.getInstance().getConf().getInt("session_time", 30) * 60000L) > System.currentTimeMillis()) {
                         Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), true);
@@ -61,7 +63,7 @@ public class PlayerJoinListener implements Listener {
 
             Utils.savePlayerDamage(e.getPlayer());
 
-            if (!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
+            if (!Utils.isPlayerRegistered(uuid)) {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
             } else {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));

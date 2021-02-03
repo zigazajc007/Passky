@@ -22,7 +22,10 @@ public class PlayerChatListener implements Listener {
         if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
             e.setCancelled(true);
 
-            if (!Passky.getInstance().getPass().contains(e.getPlayer().getName())) {
+            boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+            boolean isPlayerRegistered = (usernames) ? Utils.isPlayerRegistered(e.getPlayer().getName()) : Utils.isPlayerRegistered(e.getPlayer().getUniqueId().toString());
+
+            if (!isPlayerRegistered) {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
             } else {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));

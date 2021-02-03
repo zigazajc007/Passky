@@ -6,14 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 public class Utils {
 
@@ -40,13 +32,21 @@ public class Utils {
     public static void kickPlayer(Player player, String reason) { player.kickPlayer(chat(reason)); }
 
     public static String getPassword(String uuid){
-        if(Passky.conn != null){
-            String query = "SELECT password FROM passky_players WHERE uuid=" + uuid;
+        if(Passky.hikari != null){
+            String query = "SELECT password FROM passky_players WHERE uuid = '" + uuid + "';";
             try {
                 Connection conn = Passky.hikari.getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ResultSet rs = ps.executeQuery();
-                if(rs.next()) return rs.getString("password");
+                if(rs.next()){
+                    String password = rs.getString("password");
+                    rs.close();
+                    ps.close();
+                    conn.close();
+                    return password;
+                }
+                rs.close();
+                ps.close();
                 conn.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -57,9 +57,9 @@ public class Utils {
         return null;
     }
 
-    public static void savePassword(String uuid, String password){
-        if(Passky.conn != null){
-            String query = "INSERT INTO passky_players VALUES(" + uuid + "," + Utils.getHash(password, Utils.getConfig("encoder")) + ")";
+    public static void savePassword(String uuid, String password, String ip, String date){
+        if(Passky.hikari != null){
+            String query = "INSERT INTO passky_players VALUES('" + uuid + "','" + getHash(password, getConfig("encoder")) + "', '" + ip + "', '" + date + "');";
             try {
                 Connection conn = Passky.hikari.getConnection();
                 conn.createStatement().executeUpdate(query);
@@ -68,21 +68,44 @@ public class Utils {
                 throwables.printStackTrace();
             }
         }else{
-            Passky.getInstance().getPass().set(uuid, Utils.getHash(password, Utils.getConfig("encoder")));
+            Passky.getInstance().getPass().set(uuid, getHash(password, getConfig("encoder")));
+            Passky.getInstance().savePass();
+        }
+    }
+
+    public static void changePassword(String uuid, String password){
+        if(Passky.hikari != null){
+            String query = "UPDATE passky_players SET password = '" + getHash(password, getConfig("encoder")) + "' WHERE uuid = '" + uuid + "';";
+            try {
+                Connection conn = Passky.hikari.getConnection();
+                conn.createStatement().executeUpdate(query);
+                conn.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }else{
+            Passky.getInstance().getPass().set(uuid, getHash(password, getConfig("encoder")));
             Passky.getInstance().savePass();
         }
     }
 
     public static boolean isPlayerRegistered(String uuid){
-        if(Passky.conn != null){
-            String query = "SELECT COUNT(*) AS amount FROM passky_players WHERE uuid=" + uuid;
+        if(Passky.hikari != null){
+            String query = "SELECT COUNT(*) AS amount FROM passky_players WHERE uuid = '" + uuid + "';";
             try {
                 Connection conn = Passky.hikari.getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()){
-                    if(rs.getInt("amount") == 0) return false;
+                    if(rs.getInt("amount") == 0){
+                        rs.close();
+                        ps.close();
+                        conn.close();
+                        return false;
+                    }
                 }
+                rs.close();
+                ps.close();
                 conn.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -93,6 +116,49 @@ public class Utils {
         return true;
     }
 
+    public static Session setSession(String uuid, String ip){
+        if(Passky.hikari != null){
+            String query = "UPDATE passky_players SET ip = '" + ip + "', date = '" + System.currentTimeMillis() + "' WHERE uuid = '" + uuid + "';";
+            try {
+                Connection conn = Passky.hikari.getConnection();
+                conn.createStatement().executeUpdate(query);
+                conn.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }else{
+            return Passky.session.put(uuid, new Session(ip, System.currentTimeMillis()));
+        }
+        return null;
+    }
+
+    public static Session getSession(String uuid){
+        if(Passky.hikari != null){
+            String query = "SELECT ip, date FROM passky_players WHERE uuid = '" + uuid + "';";
+            try {
+                Connection conn = Passky.hikari.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    String ip = rs.getString("ip");
+                    long date = rs.getLong("date");
+                    rs.close();
+                    ps.close();
+                    conn.close();
+                    return new Session(ip, date);
+                }
+                rs.close();
+                ps.close();
+                conn.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }else{
+            return Passky.session.getOrDefault(uuid, null);
+        }
+        return null;
+    }
+
     public static String getHash(String password, String algorithm) {
         try {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
@@ -100,26 +166,6 @@ public class Utils {
         } catch (NoSuchAlgorithmException e) {
             return password;
         }
-    }
-
-    public static void damagePlayerWithHeight(Player player){
-        int height = 0;
-
-        Location loc = player.getLocation();
-
-        while (loc.getBlock().getType() == Material.AIR || loc.getBlock().getType() == Material.LADDER) {
-            loc.setY(loc.getBlockY() - 1);
-
-            if (loc.getBlock().getType() == Material.WATER || loc.getBlock().getType() == Material.LADDER || loc.getBlock().getType() == Material.SLIME_BLOCK || loc.getBlock().getType() == Material.LAVA) {
-                height = 0;
-            }else{
-                height++;
-            }
-        }
-
-        player.teleport(loc.add(0,1,0));
-
-        Passky.damage.put(player.getUniqueId(), height * 0.5D - 1.5D);
     }
 
     public static void savePlayerDamage(Player player){
@@ -151,25 +197,6 @@ public class Utils {
         if (!feet.getRelative(BlockFace.UP).getType().isAir() && feet.getRelative(BlockFace.UP).getType() != Material.WATER) return false;
         if (!feet.getRelative(BlockFace.DOWN).getType().isSolid()) return false;
         return true;
-    }
-
-    public static void mergeYaml(String origin, File old) {
-        InputStream stream = Passky.getInstance().getResource(origin);
-        if (stream != null) {
-            YamlConfiguration originYaml = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
-            YamlConfiguration oldYaml = YamlConfiguration.loadConfiguration(old);
-            Set<String> oldSet = oldYaml.getKeys(true);
-            for (String originYamlKey : originYaml.getKeys(true)) {
-                if (!oldSet.contains(originYamlKey)) {
-                    oldYaml.set(originYamlKey, originYaml.get(originYamlKey));
-                }
-            }
-            try {
-                oldYaml.save(old);
-            } catch (IOException e) {
-                throw new RuntimeException("Cannot save old yaml file", e);
-            }
-        }
     }
 
     private static String bytesToHex(byte[] hash) {

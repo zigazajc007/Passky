@@ -29,13 +29,13 @@ public final class Passky extends JavaPlugin {
     private static Passky instance;
 
     //Database
-    public static HikariDataSource hikari;
-    public static Connection conn = null;
+    public static HikariDataSource hikari = null;
+    private static Connection conn = null;
 
     public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
     public static HashMap<UUID, Integer> failures = new HashMap<>();
     public static HashMap<UUID, Double> damage = new HashMap<>();
-    public static HashMap<UUID, Session> session = new HashMap<>();
+    public static HashMap<String, Session> session = new HashMap<>();
 
     private File c = null;
     private final YamlConfiguration conf = new YamlConfiguration();
@@ -252,9 +252,8 @@ public final class Passky extends JavaPlugin {
     private void mkdirAndLoad(File file, YamlConfiguration conf) {
         if (!file.exists()) {
             saveResource(file.getName(), false);
-        } else {
-            //Utils.mergeYaml(file.getName(), file);
         }
+
         try {
             conf.load(file);
         } catch (InvalidConfigurationException | IOException e) {
@@ -269,13 +268,14 @@ public final class Passky extends JavaPlugin {
             hikari.setJdbcUrl("jdbc:mysql://" + getConf().getString("mysql_host") + ":" + getConf().getString("mysql_port") + "/" + getConf().getString("mysql_database"));
             hikari.setUsername(getConf().getString("mysql_user"));
             hikari.setPassword(getConf().getString("mysql_password"));
-            hikari.addDataSourceProperty("useSSL", getConf().getString("mysql_useSSL"));
+            hikari.addDataSourceProperty("useSSL", getConf().getString("mysql_useSSL", "false"));
             hikari.addDataSourceProperty("cachePrepStmts", "true");
             hikari.addDataSourceProperty("prepStmtCacheSize", "250");
             hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            hikari.setConnectionTimeout(10000);
 
             conn = hikari.getConnection();
-            conn.createStatement().execute("CREATE TABLE IF NOT EXISTS passky_players(uuid CHAR(36) NOT NULL PRIMARY KEY, password CHAR(" + getConf().getInt("max_password_length", 32) + ") NOT NULL)");
+            conn.createStatement().execute("CREATE TABLE IF NOT EXISTS passky_players(uuid CHAR(36) NOT NULL PRIMARY KEY, password CHAR(200) NOT NULL, ip CHAR(39), date CHAR(20) NOT NULL)");
             conn.close();
         } catch (SQLException ignored) {
             conn = null;

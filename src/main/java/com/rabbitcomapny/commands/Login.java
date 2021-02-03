@@ -17,8 +17,8 @@ public class Login implements ICommand {
         }
 
         Player player = (Player) sender;
-
-        String password = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? Utils.getPassword(player.getName()) : Utils.getPassword(player.getUniqueId().toString());
+        String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
+        String password = Utils.getPassword(uuid);
         if (password != null) {
             if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
                 if (args.length == 1) {
@@ -30,7 +30,7 @@ public class Login implements ICommand {
                         if (damage > 0D) player.damage(damage);
                         if(Passky.getInstance().getConf().getBoolean("session_enabled", false)){
                             if(player.getAddress() != null && player.getAddress().getAddress() != null)
-                                Passky.session.put(player.getUniqueId(), new Session(player.getAddress().getAddress().toString().replace("/", ""), System.currentTimeMillis()));
+                                Utils.setSession(uuid, player.getAddress().getAddress().toString().replace("/", ""));
                         }
                     } else {
                         int attempts = Passky.failures.merge(player.getUniqueId(), 1, Integer::sum);
