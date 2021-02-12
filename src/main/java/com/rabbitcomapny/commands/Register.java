@@ -36,6 +36,7 @@ public class Register implements ICommand {
 
                                 Passky.isLoggedIn.put(player.getUniqueId(), true);
                                 player.removePotionEffect(PotionEffectType.BLINDNESS);
+                                player.resetTitle();
                                 player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
                                 double damage = Passky.damage.getOrDefault(player.getUniqueId(), 0D);
                                 if(damage > 0D) player.damage(damage);

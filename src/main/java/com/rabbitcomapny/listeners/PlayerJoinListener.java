@@ -65,8 +65,12 @@ public class PlayerJoinListener implements Listener {
 
             if (!Utils.isPlayerRegistered(uuid)) {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
+                if(passky.getConf().getBoolean("titles_enabled", true))
+                    e.getPlayer().sendTitle(Utils.chat(passky.getConf().getString("register_title", "&aRegister")), Utils.chat(passky.getConf().getString("register_subtitle", "&a/register <password> <password>")), 50, passky.getConf().getInt("time_before_kick", 30)*20,50);
             } else {
                 e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));
+                if(passky.getConf().getBoolean("titles_enabled", true))
+                    e.getPlayer().sendTitle(Utils.chat(passky.getConf().getString("login_title", "&aLogin")), Utils.chat(passky.getConf().getString("login_subtitle", "&a/login <password>")), 50, passky.getConf().getInt("time_before_kick", 30)*20,50);
             }
 
             Bukkit.getScheduler().runTaskLater(Passky.getInstance(), () -> {

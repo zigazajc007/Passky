@@ -25,6 +25,16 @@ hide_password: true
 session_enabled: true
 # How many minutes do you want session to last?
 session_time: 30
+# Do you want to enable titles and subtitles?
+titles_enabled: true
+# This title will show when player is required to login
+login_title: "&aLogin"
+# This subtitle will show when player is required to login
+login_subtitle: "&a/login <password>"
+# This title will show when player is required to register
+register_title: "&aRegister"
+# This subtitle will show when player is required to register
+register_subtitle: "&a/register <password> <password>"
 #----------------------------------------------------------
 #   MySQL Database - Recommended for Bungeecord networks
 #----------------------------------------------------------

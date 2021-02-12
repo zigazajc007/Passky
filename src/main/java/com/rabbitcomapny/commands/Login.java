@@ -25,6 +25,7 @@ public class Login implements ICommand {
                     if (password.equals(Utils.getHash(args[0], Utils.getConfig("encoder")))) {
                         Passky.isLoggedIn.put(player.getUniqueId(), true);
                         player.removePotionEffect(PotionEffectType.BLINDNESS);
+                        player.resetTitle();
                         player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
                         double damage = Passky.damage.getOrDefault(player.getUniqueId(), 0D);
                         if (damage > 0D) player.damage(damage);
