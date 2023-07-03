@@ -9,8 +9,5 @@
         <module name="Passky" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Passky" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

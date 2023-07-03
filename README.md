@@ -1,3 +1,3 @@
 <p align="center">
-  <img src="https://imgur.com/FVmvUht.png">
+  <img src="https://cdn.rabbit-company.com/plugins/Passky/banner.jpg">
 </p>

@@ -69,6 +69,10 @@ public final class Passky extends JavaPlugin {
         mkdirAndLoad(m, mess);
         mkdirAndLoad(p, pass);
 
+        //bStats
+        Metrics metrics = new Metrics(this, 18975);
+        metrics.addCustomChart(new Metrics.SimplePie("mysql", () -> getConf().getString("mysql", "false")));
+
         if (conf.getBoolean("hide_password", true)) {
             setupPasswordFilter();
         }
@@ -294,7 +298,8 @@ public final class Passky extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8| &cSupport:"));
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bCrazy Rabbit#0001"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Website: &bhttps://rabbit-company.com"));
+        Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bziga.zajc007"));
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Mail: &bziga.zajc007@gmail.com"));
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bhttps://discord.gg/hUNymXX"));
         Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
