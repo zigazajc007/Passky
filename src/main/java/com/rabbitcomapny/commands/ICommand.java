@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 public interface ICommand extends TabExecutor {
-    @Override
-    default List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return Collections.emptyList();
-    }
+	@Override
+	default List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		return Collections.emptyList();
+	}
 }

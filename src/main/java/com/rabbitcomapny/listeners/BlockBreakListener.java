@@ -8,19 +8,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreakListener implements Listener {
 
-    private final Passky passky;
+	private final Passky passky;
 
-    public BlockBreakListener(Passky plugin){
-        passky = plugin;
+	public BlockBreakListener(Passky plugin) {
+		passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-            e.setCancelled(true);
-        }
-    }
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent e) {
+		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+			e.setCancelled(true);
+		}
+	}
 
 }

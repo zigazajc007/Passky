@@ -8,19 +8,19 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class PlayerDropItemListener implements Listener {
 
-    private final Passky passky;
+	private final Passky passky;
 
-    public PlayerDropItemListener(Passky plugin){
-        passky = plugin;
+	public PlayerDropItemListener(Passky plugin) {
+		passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent e){
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-            e.setCancelled(true);
-        }
-    }
+	@EventHandler
+	public void onPlayerDropItem(PlayerDropItemEvent e) {
+		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+			e.setCancelled(true);
+		}
+	}
 
 }

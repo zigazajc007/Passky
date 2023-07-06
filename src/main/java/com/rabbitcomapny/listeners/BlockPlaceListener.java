@@ -8,19 +8,19 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockPlaceListener implements Listener {
 
-    private final Passky passky;
+	private final Passky passky;
 
-    public BlockPlaceListener(Passky plugin){
-        passky = plugin;
+	public BlockPlaceListener(Passky plugin) {
+		passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e){
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-            e.setCancelled(true);
-        }
-    }
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent e) {
+		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+			e.setCancelled(true);
+		}
+	}
 
 }

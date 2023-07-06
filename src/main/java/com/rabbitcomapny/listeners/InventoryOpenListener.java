@@ -8,19 +8,19 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class InventoryOpenListener implements Listener {
 
-    private final Passky passky;
+	private final Passky passky;
 
-    public InventoryOpenListener(Passky plugin){
-        passky = plugin;
+	public InventoryOpenListener(Passky plugin) {
+		passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e){
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-            e.setCancelled(true);
-        }
-    }
+	@EventHandler
+	public void onInventoryOpen(InventoryOpenEvent e) {
+		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+			e.setCancelled(true);
+		}
+	}
 
 }

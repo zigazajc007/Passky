@@ -7,18 +7,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class PlayerPickUpItemListener
-        implements Listener {
-    private final Passky passky;
+	implements Listener {
+	private final Passky passky;
 
-    public PlayerPickUpItemListener(Passky plugin) {
-        this.passky = plugin;
+	public PlayerPickUpItemListener(Passky plugin) {
+		this.passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onPlayerPickUpItem(PlayerPickupItemEvent e) {
-        if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false))
-            e.setCancelled(true);
-    }
+	@EventHandler
+	public void onPlayerPickUpItem(PlayerPickupItemEvent e) {
+		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false))
+			e.setCancelled(true);
+	}
 }

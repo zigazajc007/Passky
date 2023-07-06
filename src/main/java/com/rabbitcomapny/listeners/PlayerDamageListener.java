@@ -9,20 +9,20 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class PlayerDamageListener implements Listener {
 
-    private final Passky passky;
+	private final Passky passky;
 
-    public PlayerDamageListener(Passky plugin){
-        passky = plugin;
+	public PlayerDamageListener(Passky plugin) {
+		passky = plugin;
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
 
-    @EventHandler
-    public void onPlayerDamage(EntityDamageEvent e){
-        if (e.getEntity() instanceof Player){
-            if (!Passky.isLoggedIn.getOrDefault(e.getEntity().getUniqueId(), false)) {
-                e.setCancelled(true);
-            }
-        }
-    }
+	@EventHandler
+	public void onPlayerDamage(EntityDamageEvent e) {
+		if (e.getEntity() instanceof Player) {
+			if (!Passky.isLoggedIn.getOrDefault(e.getEntity().getUniqueId(), false)) {
+				e.setCancelled(true);
+			}
+		}
+	}
 }
