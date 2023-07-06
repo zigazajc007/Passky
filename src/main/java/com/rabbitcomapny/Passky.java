@@ -2,6 +2,7 @@ package com.rabbitcomapny;
 
 import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
+import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import com.zaxxer.hikari.HikariDataSource;
@@ -277,7 +278,7 @@ public final class Passky extends JavaPlugin {
 			hikari.setConnectionTimeout(10000);
 
 			conn = hikari.getConnection();
-			conn.createStatement().execute("CREATE TABLE IF NOT EXISTS passky_players(uuid CHAR(36) NOT NULL PRIMARY KEY, password CHAR(200) NOT NULL, ip CHAR(39), date CHAR(20) NOT NULL)");
+			conn.createStatement().execute("CREATE TABLE IF NOT EXISTS passky_players(uuid CHAR(36) NOT NULL PRIMARY KEY, algo CHAR(20) NOT NULL, hash CHAR(200) NOT NULL, salt CHAR(200) NOT NULL, ip CHAR(39), date CHAR(20) NOT NULL)");
 			conn.close();
 		} catch (SQLException ignored) {
 			conn = null;

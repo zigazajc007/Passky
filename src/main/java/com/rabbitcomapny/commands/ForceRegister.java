@@ -19,6 +19,7 @@ public class ForceRegister implements ICommand {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_register_syntax"));
 			return true;
 		}
+
 		boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
 		boolean isPlayerRegistered = usernames && Utils.isPlayerRegistered(args[0]);
 
@@ -31,6 +32,7 @@ public class ForceRegister implements ICommand {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_long"));
 			return true;
 		}
+
 		if (args[1].length() < Integer.parseInt(Utils.getConfig("min_password_length"))) {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_short"));
 			return true;

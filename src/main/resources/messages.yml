@@ -39,7 +39,7 @@ prefix: "&7[&aPassky&7] "
 #----------------------------------------------------------
 #                       Register
 #----------------------------------------------------------
-register_successfully: "&2Successfuly registered. Auto logging-in!"
+register_successfully: "&2Successfully registered. Auto logging-in!"
 register_too_short: "&cPassword is too short!"
 register_too_long: "&cPassword is too long!"
 register_doesnt_match: "&cPassword doesn't match!"
@@ -49,7 +49,7 @@ register_syntax: "&cPlease use: /register <pass> <pass>"
 #----------------------------------------------------------
 #                        Login
 #----------------------------------------------------------
-login_successfully: "&2Successfuly logged-in!"
+login_successfully: "&2Successfully logged-in!"
 login_too_many_attempts: "&cYou entered wrong password too many times!"
 login_time: "&cYou have only {time} seconds to login."
 login_incorrect: "&cYour password is incorrect!"
@@ -77,8 +77,8 @@ force_changepass_notice: "&cPassword was changed, please re-login."
 #----------------------------------------------------------
 #                   Force register
 #----------------------------------------------------------
-force_register_successfully: "&2Successfuly registered."
-force_register_already: "&cPlayer are already registered! Please use /fcp <playerName> <newPassword> to change password!"
+force_register_successfully: "&2Successfully registered."
+force_register_already: "&cPlayer is already registered! Please use /fcp <playerName> <newPassword> to change password!"
 force_register_syntax: "&cPlease use: /fr <playerName> <pass>"
 #----------------------------------------------------------
 #                   Illegal username

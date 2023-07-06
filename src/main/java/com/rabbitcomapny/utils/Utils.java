@@ -8,9 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,19 +31,22 @@ public class Utils {
 		player.kickPlayer(chat(reason));
 	}
 
-	public static String getPassword(String uuid) {
+	public static Hash getHash(String uuid) {
 		if (Passky.hikari != null) {
-			String query = "SELECT password FROM passky_players WHERE uuid = '" + uuid + "';";
+			String query = "SELECT algo, hash, salt FROM passky_players WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(0, uuid);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
-					String password = rs.getString("password");
+					String algo = rs.getString("algo");
+					String hash = rs.getString("hash");
+					String salt = rs.getString("salt");
 					rs.close();
 					ps.close();
 					conn.close();
-					return password;
+					return new Hash(algo, hash, salt, true);
 				}
 				rs.close();
 				ps.close();
@@ -55,14 +55,18 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
-			return Passky.getInstance().getPass().getString(uuid);
+			String algo = Passky.getInstance().getPass().getString(uuid + ".algo");
+			String hash = Passky.getInstance().getPass().getString(uuid + ".hash");
+			String salt = Passky.getInstance().getPass().getString(uuid + ".salt");
+			return (algo != null && hash != null && salt != null) ? new Hash(algo, hash, salt, true) : null;
 		}
 		return null;
 	}
 
 	public static void savePassword(String uuid, String password, String ip, String date) {
+		Hash hash = new Hash(getConfig("encoder"), password);
 		if (Passky.hikari != null) {
-			String query = "INSERT INTO passky_players VALUES('" + uuid + "','" + getHash(password, getConfig("encoder")) + "', '" + ip + "', '" + date + "');";
+			String query = "INSERT INTO passky_players VALUES('" + uuid + "','" + hash.algo + "', '" + hash.hash + "', '" + hash.salt + "', '" + ip + "', '" + date + "');";
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				conn.createStatement().executeUpdate(query);
@@ -71,33 +75,44 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
-			Passky.getInstance().getPass().set(uuid, getHash(password, getConfig("encoder")));
+			Passky.getInstance().getPass().set(uuid + ".algo", hash.algo);
+			Passky.getInstance().getPass().set(uuid + ".hash", hash.hash);
+			Passky.getInstance().getPass().set(uuid + ".salt", hash.salt);
 			Passky.getInstance().savePass();
 		}
 	}
 
 	public static void changePassword(String uuid, String password) {
+		Hash hash = new Hash(getConfig("encoder"), password);
 		if (Passky.hikari != null) {
-			String query = "UPDATE passky_players SET password = '" + getHash(password, getConfig("encoder")) + "' WHERE uuid = '" + uuid + "';";
+			String query = "UPDATE passky_players SET algo = ?, hash = ?, salt = ? WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
-				conn.createStatement().executeUpdate(query);
+				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, hash.algo);
+				ps.setString(2, hash.hash);
+				ps.setString(3, hash.salt);
+				ps.setString(4, uuid);
+				ps.executeUpdate(query);
 				conn.close();
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
 			}
 		} else {
-			Passky.getInstance().getPass().set(uuid, getHash(password, getConfig("encoder")));
+			Passky.getInstance().getPass().set(uuid + ".algo", hash.algo);
+			Passky.getInstance().getPass().set(uuid + ".hash", hash.hash);
+			Passky.getInstance().getPass().set(uuid + ".salt", hash.salt);
 			Passky.getInstance().savePass();
 		}
 	}
 
 	public static boolean isPlayerRegistered(String uuid) {
 		if (Passky.hikari != null) {
-			String query = "SELECT COUNT(*) AS amount FROM passky_players WHERE uuid = '" + uuid + "';";
+			String query = "SELECT COUNT(*) AS amount FROM passky_players WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, uuid);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
 					if (rs.getInt("amount") == 0) {
@@ -162,15 +177,6 @@ public class Utils {
 		return null;
 	}
 
-	public static String getHash(String password, String algorithm) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance(algorithm);
-			return bytesToHex(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-		} catch (NoSuchAlgorithmException e) {
-			return password;
-		}
-	}
-
 	public static void savePlayerDamage(Player player) {
 		int height = 0;
 
@@ -203,13 +209,4 @@ public class Utils {
 		return feet.getRelative(BlockFace.DOWN).getType().isSolid();
 	}
 
-	private static String bytesToHex(byte[] hash) {
-		StringBuilder hexString = new StringBuilder();
-		for (byte b : hash) {
-			String hex = Integer.toHexString(0xff & b);
-			if (hex.length() == 1) hexString.append('0');
-			hexString.append(hex);
-		}
-		return hexString.toString();
-	}
 }

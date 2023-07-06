@@ -1,6 +1,7 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,40 +16,49 @@ public class Changepass implements ICommand {
 		}
 
 		Player player = (Player) sender;
-
 		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
-		String password = Utils.getPassword(uuid);
+		Hash hash = Utils.getHash(uuid);
 
-		if (password != null) {
-			if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
-				if (args.length == 2) {
-					if (!args[0].equals(args[1])) {
-						if (password.equals(Utils.getHash(args[0], Utils.getConfig("encoder")))) {
-							if (args[1].length() <= Integer.parseInt(Utils.getConfig("max_password_length"))) {
-								if (args[1].length() >= Integer.parseInt(Utils.getConfig("min_password_length"))) {
-									Utils.changePassword(uuid, args[1]);
-									player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_successfully"));
-								} else {
-									player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_short"));
-								}
-							} else {
-								player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_long"));
-							}
-						} else {
-							player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_incorrect"));
-						}
-					} else {
-						player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_same"));
-					}
-				} else {
-					player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_syntax"));
-				}
-			} else {
-				player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_login_first"));
-			}
-		} else {
+		if(hash == null){
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_register"));
+			return true;
 		}
+
+		if(!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_login_first"));
+			return true;
+		}
+
+		if(args.length != 2){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_syntax"));
+			return true;
+		}
+
+		String oldPassword = args[0];
+		String newPassword = args[1];
+		if(oldPassword.equals(newPassword)){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_same"));
+			return true;
+		}
+
+		Hash hash2 = new Hash(hash.algo, oldPassword, hash.salt, false);
+		if(!hash2.hash.equals(hash.hash)){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_incorrect"));
+			return true;
+		}
+
+		if(newPassword.length() > Integer.parseInt(Utils.getConfig("max_password_length"))){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_long"));
+			return true;
+		}
+
+		if(newPassword.length() < Integer.parseInt(Utils.getConfig("min_password_length"))){
+			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_short"));
+			return true;
+		}
+
+		Utils.changePassword(uuid, newPassword);
+		player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_successfully"));
 		return true;
 	}
 }
