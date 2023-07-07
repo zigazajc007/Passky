@@ -9,6 +9,9 @@ commands:
     usage: /<command>
     aliases: [ log, l ]
     description: Login to your minecraft account
+  logout:
+    usage: /<command>
+    description: Logout from your minecraft account
   register:
     usage: /<command>
     aliases: [ reg, r ]

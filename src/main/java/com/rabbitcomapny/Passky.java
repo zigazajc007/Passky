@@ -90,6 +90,7 @@ public final class Passky extends JavaPlugin {
 		}
 
 		getCommand("login").setExecutor(new Login());
+		getCommand("logout").setExecutor(new Logout());
 		getCommand("register").setExecutor(new Register());
 		getCommand("changepassword").setExecutor(new Changepass());
 		getCommand("forcechangepassword").setExecutor(new ForceChangePassword());

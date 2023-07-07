@@ -37,7 +37,7 @@ public class Utils {
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query);
-				ps.setString(0, uuid);
+				ps.setString(1, uuid);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
 					String algo = rs.getString("algo");
@@ -66,10 +66,18 @@ public class Utils {
 	public static void savePassword(String uuid, String password, String ip, String date) {
 		Hash hash = new Hash(getConfig("encoder"), password);
 		if (Passky.hikari != null) {
-			String query = "INSERT INTO passky_players VALUES('" + uuid + "','" + hash.algo + "', '" + hash.hash + "', '" + hash.salt + "', '" + ip + "', '" + date + "');";
+			String query = "INSERT INTO passky_players VALUES(?,?,?,?,?,?);";
 			try {
 				Connection conn = Passky.hikari.getConnection();
-				conn.createStatement().executeUpdate(query);
+				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, uuid);
+				ps.setString(2, hash.algo);
+				ps.setString(3, hash.hash);
+				ps.setString(4, hash.salt);
+				ps.setString(5, ip);
+				ps.setString(6, date);
+				ps.executeUpdate();
+				ps.close();
 				conn.close();
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
@@ -93,7 +101,8 @@ public class Utils {
 				ps.setString(2, hash.hash);
 				ps.setString(3, hash.salt);
 				ps.setString(4, uuid);
-				ps.executeUpdate(query);
+				ps.executeUpdate();
+				ps.close();
 				conn.close();
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
@@ -136,10 +145,15 @@ public class Utils {
 
 	public static Session setSession(String uuid, String ip) {
 		if (Passky.hikari != null) {
-			String query = "UPDATE passky_players SET ip = '" + ip + "', date = '" + System.currentTimeMillis() + "' WHERE uuid = '" + uuid + "';";
+			String query = "UPDATE passky_players SET ip = ?, date = ? WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
-				conn.createStatement().executeUpdate(query);
+				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, ip);
+				ps.setString(2, String.valueOf(System.currentTimeMillis()));
+				ps.setString(3, uuid);
+				ps.executeUpdate();
+				ps.close();
 				conn.close();
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
@@ -150,12 +164,32 @@ public class Utils {
 		return null;
 	}
 
-	public static Session getSession(String uuid) {
+	public static void removeSession(String uuid) {
 		if (Passky.hikari != null) {
-			String query = "SELECT ip, date FROM passky_players WHERE uuid = '" + uuid + "';";
+			String query = "UPDATE passky_players SET date = ? WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, "0");
+				ps.setString(2, uuid);
+				ps.executeUpdate();
+				ps.close();
+				conn.close();
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
+		} else {
+			Passky.session.remove(uuid);
+		}
+	}
+
+	public static Session getSession(String uuid) {
+		if (Passky.hikari != null) {
+			String query = "SELECT ip, date FROM passky_players WHERE uuid = ?;";
+			try {
+				Connection conn = Passky.hikari.getConnection();
+				PreparedStatement ps = conn.prepareStatement(query);
+				ps.setString(1, uuid);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
 					String ip = rs.getString("ip");

@@ -57,6 +57,11 @@ login_register: "&cYou need to register first!"
 login_already: "&cYou are already logged in!"
 login_syntax: "&cPlease use: /login <password>"
 #----------------------------------------------------------
+#                        Logout
+#----------------------------------------------------------
+logout_successfully: "&2Successfully logged-out!"
+logout_login_first: "&cYou need to be logged in first!"
+#----------------------------------------------------------
 #                   Change password
 #----------------------------------------------------------
 changepass_successfully: "&aYour password has been changed successfully!"
