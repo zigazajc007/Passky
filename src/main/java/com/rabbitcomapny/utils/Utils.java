@@ -129,7 +129,7 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
-			return Passky.getInstance().getPass().contains(uuid);
+			return Passky.getInstance().getPass().contains(uuid + ".hash");
 		}
 		return true;
 	}

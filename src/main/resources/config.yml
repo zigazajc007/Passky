@@ -6,9 +6,9 @@
 #
 # Here you can change which encoder will your server use. You can use: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512 or null - for no encoder
 encoder: "SHA-256"
-# How many times can player enter wrong password before server kick the player
+# How many times the player can enter the wrong password before server kicks it
 attempts: 5
-# How much time player have to log in before he get kicked. Time is written in seconds.
+# How much time player have to log in before he gets kicked. Time is written in seconds.
 time_before_kick: 30
 # Minimum characters for password
 min_password_length: 4
