@@ -2,7 +2,6 @@ package com.rabbitcomapny;
 
 import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
-import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import com.zaxxer.hikari.HikariDataSource;
@@ -42,6 +41,7 @@ public final class Passky extends JavaPlugin {
 	private File c = null;
 	private File m = null;
 	private File p = null;
+	public static String new_version = null;
 
 	public static Passky getInstance() {
 		return instance;
@@ -72,6 +72,14 @@ public final class Passky extends JavaPlugin {
 		Metrics metrics = new Metrics(this, 18975);
 		metrics.addCustomChart(new Metrics.SimplePie("mysql", () -> getConf().getString("mysql", "false")));
 
+		//Updater
+		new UpdateChecker(this, 71835).getVersion(updater_version -> {
+			if (!getDescription().getVersion().equalsIgnoreCase(updater_version)) {
+				new_version = updater_version;
+			}
+			info("&aEnabling");
+		});
+
 		if (conf.getBoolean("hide_password", true)) {
 			setupPasswordFilter();
 		}
@@ -80,8 +88,6 @@ public final class Passky extends JavaPlugin {
 		if (getConf().getBoolean("mysql", false)) {
 			setupMySQL();
 		}
-
-		info("&aEnabling");
 
 		getCommand("login").setExecutor(new Login());
 		getCommand("register").setExecutor(new Register());
@@ -286,24 +292,33 @@ public final class Passky extends JavaPlugin {
 	}
 
 	private void info(String message) {
-		Bukkit.getConsoleSender().sendMessage(Utils.chat(""));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8[]==========[" + message + " &aPassky&8]==========[]"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8| &cInformation:"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Name: &bPassky"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Developer: &bBlack1_TV"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Version: &b" + getDescription().getVersion()));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8| &cSupport:"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Website: &bhttps://rabbit-company.com"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bziga.zajc007"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Mail: &bziga.zajc007@gmail.com"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|   &9Discord: &bhttps://discord.gg/hUNymXX"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8|"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat("&8[]=====================================[]"));
-		Bukkit.getConsoleSender().sendMessage(Utils.chat(""));
+		String text = "\n\n";
+		text += "&8[]============[" + message + " &cPassky&8]============[]\n";
+		text += "&8|\n";
+		text += "&8| &cInformation:\n";
+		text += "&8|\n";
+		text += "&8|   &9Name: &bPassky\n";
+		text += "&8|   &9Developer: &bBlack1_TV\n";
+		if (new_version != null) {
+			text += "&8|   &9Version: &b" + getDescription().getVersion() + " (&6update available&b)\n";
+		}else{
+			text += "&8|   &9Version: &b" + getDescription().getVersion() + "\n";
+		}
+		text += "&8|   &9Website: &bhttps://rabbit-company.com\n";
+		text += "&8|\n";
+		text += "&8| &cSponsors:\n";
+		text += "&8|\n";
+		text += "&8|   &9- &6https://rabbitserverlist.com\n";
+		text += "&8|\n";
+		text += "&8| &cSupport:\n";
+		text += "&8|\n";
+		text += "&8|   &9Discord: &bziga.zajc007\n";
+		text += "&8|   &9Mail: &bziga.zajc007@gmail.com\n";
+		text += "&8|   &9Discord: &bhttps://discord.gg/hUNymXX\n";
+		text += "&8|\n";
+		text += "&8[]=========================================[]\n";
+
+		Bukkit.getConsoleSender().sendMessage(Utils.chat(text));
 	}
 
 	public YamlConfiguration getConf() {
