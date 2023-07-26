@@ -1,9 +1,7 @@
 package com.rabbitcomapny.utils;
 
 import com.rabbitcomapny.Passky;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -209,6 +207,28 @@ public class Utils {
 			return Passky.session.getOrDefault(uuid, null);
 		}
 		return null;
+	}
+
+	public static Location getLastPlayerLocation(String uuid){
+		String sWorld = Passky.getInstance().getPass().getString(uuid + ".loc.world");
+		double x = Passky.getInstance().getPass().getDouble(uuid + ".loc.x");
+		double y = Passky.getInstance().getPass().getDouble(uuid + ".loc.y");
+		double z = Passky.getInstance().getPass().getDouble(uuid + ".loc.z");
+		float yaw = (float) Passky.getInstance().getPass().getDouble(uuid + ".loc.yaw");
+		float pitch = (float) Passky.getInstance().getPass().getDouble(uuid + ".loc.pitch");
+		if(sWorld == null) return null;
+		World world = Bukkit.getServer().getWorld(sWorld);
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+
+	public static void saveLastPlayerLocation(String uuid, Location loc){
+		Passky.getInstance().getPass().set(uuid + ".loc.world", loc.getWorld().getName());
+		Passky.getInstance().getPass().set(uuid + ".loc.x", loc.getX());
+		Passky.getInstance().getPass().set(uuid + ".loc.y", loc.getY());
+		Passky.getInstance().getPass().set(uuid + ".loc.z", loc.getZ());
+		Passky.getInstance().getPass().set(uuid + ".loc.yaw", loc.getYaw());
+		Passky.getInstance().getPass().set(uuid + ".loc.pitch", loc.getPitch());
+		Passky.getInstance().savePass();
 	}
 
 	public static void savePlayerDamage(Player player) {

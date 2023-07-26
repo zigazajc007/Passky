@@ -107,6 +107,9 @@ public final class Passky extends JavaPlugin {
 		new PlayerDamageListener(this);
 		new BlockPlaceListener(this);
 		new BlockBreakListener(this);
+		if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
+			new PlayerLeaveListener(this);
+		}
 	}
 
 	public void setupPasswordFilter() {

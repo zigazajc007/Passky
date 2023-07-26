@@ -55,6 +55,10 @@ public class PlayerJoinListener implements Listener {
 
 		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
 
+			if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
+				e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+			}
+
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
 
 			Utils.savePlayerDamage(e.getPlayer());

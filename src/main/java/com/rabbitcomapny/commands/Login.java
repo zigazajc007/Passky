@@ -4,6 +4,8 @@ import com.rabbitcomapny.Passky;
 import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,6 +53,10 @@ public class Login implements ICommand {
 		}
 
 		Passky.isLoggedIn.put(player.getUniqueId(), true);
+		if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
+			Location loc = Utils.getLastPlayerLocation(uuid);
+			if(loc != null) player.teleport(loc);
+		}
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
 		player.resetTitle();
 		player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
