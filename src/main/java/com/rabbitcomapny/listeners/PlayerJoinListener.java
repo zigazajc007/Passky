@@ -4,6 +4,7 @@ import com.rabbitcomapny.Passky;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -56,6 +57,8 @@ public class PlayerJoinListener implements Listener {
 		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
 
 			if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
+				Location loc = Utils.getLastPlayerLocation(uuid);
+				if(loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
 				e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
 			}
 
