@@ -18,8 +18,6 @@ max_password_length: 32
 kick_illegal_usernames: true
 # Do you want players to be identified with usernames (0) or UUIDs (1) (Default is usernames (0))
 player_identifier: 0
-# Protect player location by teleporting them to spawnpoint until they log in successfully
-location_protection: true
 # Hiding the command log of the plugin command in console?
 # It will protect password
 hide_password: true

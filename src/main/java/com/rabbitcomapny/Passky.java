@@ -30,8 +30,8 @@ public final class Passky extends JavaPlugin {
 	public static HikariDataSource hikari = null;
 	public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
 	public static HashMap<UUID, Integer> failures = new HashMap<>();
-	public static HashMap<UUID, Double> damage = new HashMap<>();
 	public static HashMap<String, Session> session = new HashMap<>();
+	public static String new_version = null;
 	private static Passky instance;
 	private static Connection conn = null;
 	private static org.apache.logging.log4j.core.Filter passwordFilter;
@@ -41,7 +41,6 @@ public final class Passky extends JavaPlugin {
 	private File c = null;
 	private File m = null;
 	private File p = null;
-	public static String new_version = null;
 
 	public static Passky getInstance() {
 		return instance;
@@ -107,9 +106,7 @@ public final class Passky extends JavaPlugin {
 		new PlayerDamageListener(this);
 		new BlockPlaceListener(this);
 		new BlockBreakListener(this);
-		if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
-			new PlayerLeaveListener(this);
-		}
+		new PlayerLeaveListener(this);
 	}
 
 	public void setupPasswordFilter() {
@@ -305,7 +302,7 @@ public final class Passky extends JavaPlugin {
 		text += "&8|   &9Developer: &bBlack1_TV\n";
 		if (new_version != null) {
 			text += "&8|   &9Version: &b" + getDescription().getVersion() + " (&6update available&b)\n";
-		}else{
+		} else {
 			text += "&8|   &9Version: &b" + getDescription().getVersion() + "\n";
 		}
 		text += "&8|   &9Website: &bhttps://rabbit-company.com\n";

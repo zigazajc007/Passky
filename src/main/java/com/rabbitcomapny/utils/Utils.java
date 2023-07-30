@@ -1,9 +1,10 @@
 package com.rabbitcomapny.utils;
 
 import com.rabbitcomapny.Passky;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -209,19 +210,19 @@ public class Utils {
 		return null;
 	}
 
-	public static Location getLastPlayerLocation(String uuid){
+	public static Location getLastPlayerLocation(String uuid) {
 		String sWorld = Passky.getInstance().getPass().getString(uuid + ".loc.world");
 		double x = Passky.getInstance().getPass().getDouble(uuid + ".loc.x");
 		double y = Passky.getInstance().getPass().getDouble(uuid + ".loc.y");
 		double z = Passky.getInstance().getPass().getDouble(uuid + ".loc.z");
 		float yaw = (float) Passky.getInstance().getPass().getDouble(uuid + ".loc.yaw");
 		float pitch = (float) Passky.getInstance().getPass().getDouble(uuid + ".loc.pitch");
-		if(sWorld == null) return null;
+		if (sWorld == null) return null;
 		World world = Bukkit.getServer().getWorld(sWorld);
 		return new Location(world, x, y, z, yaw, pitch);
 	}
 
-	public static void saveLastPlayerLocation(String uuid, Location loc){
+	public static void saveLastPlayerLocation(String uuid, Location loc) {
 		Passky.getInstance().getPass().set(uuid + ".loc.world", loc.getWorld().getName());
 		Passky.getInstance().getPass().set(uuid + ".loc.x", loc.getX());
 		Passky.getInstance().getPass().set(uuid + ".loc.y", loc.getY());
@@ -229,38 +230,6 @@ public class Utils {
 		Passky.getInstance().getPass().set(uuid + ".loc.yaw", loc.getYaw());
 		Passky.getInstance().getPass().set(uuid + ".loc.pitch", loc.getPitch());
 		Passky.getInstance().savePass();
-	}
-
-	public static void savePlayerDamage(Player player) {
-		int height = 0;
-
-		Location loc = player.getLocation();
-
-		while (!isSafeLocation(loc)) {
-			if (loc.getY() > 0) {
-				loc.subtract(0, 1, 0);
-			} else {
-				loc.add(1, 100, 1);
-			}
-			if (loc.getBlock().getType() == Material.WATER) {
-				height = 0;
-			} else {
-				height++;
-			}
-		}
-
-		player.teleport(loc);
-
-		Passky.damage.put(player.getUniqueId(), height * 0.5D - 1.5D);
-	}
-
-	public static boolean isSafeLocation(Location location) {
-		Block feet = location.getBlock();
-		if ((!feet.getType().isAir() && feet.getType() != Material.WATER) && (!feet.getLocation().add(0, 1, 0).getBlock().getType().isAir() && feet.getLocation().add(0, 1, 0).getBlock().getType() != Material.WATER))
-			return false;
-		if (!feet.getRelative(BlockFace.UP).getType().isAir() && feet.getRelative(BlockFace.UP).getType() != Material.WATER)
-			return false;
-		return feet.getRelative(BlockFace.DOWN).getType().isSolid();
 	}
 
 }

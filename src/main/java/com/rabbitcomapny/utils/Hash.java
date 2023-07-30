@@ -10,7 +10,7 @@ public class Hash {
 	public String hash;
 	public String salt;
 
-	public Hash(String algo, String password){
+	public Hash(String algo, String password) {
 		try {
 			MessageDigest digest = MessageDigest.getInstance(algo);
 			this.algo = algo;
@@ -25,9 +25,9 @@ public class Hash {
 		}
 	}
 
-	public Hash(String algo, String password, String salt, boolean hashed){
+	public Hash(String algo, String password, String salt, boolean hashed) {
 
-		if(hashed){
+		if (hashed) {
 			this.algo = algo;
 			this.hash = password;
 			this.salt = salt;
@@ -47,7 +47,7 @@ public class Hash {
 		}
 	}
 
-	private static byte[] generateSalt(){
+	private static byte[] generateSalt() {
 		SecureRandom random = new SecureRandom();
 		byte[] salt = new byte[32];
 		random.nextBytes(salt);

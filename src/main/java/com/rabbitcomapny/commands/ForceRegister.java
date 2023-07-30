@@ -3,6 +3,7 @@ package com.rabbitcomapny.commands;
 import com.rabbitcomapny.Passky;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,10 +44,12 @@ public class ForceRegister implements ICommand {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getName().equals(args[0])) {
 				Passky.isLoggedIn.put(p.getUniqueId(), true);
+
+				Location loc = Utils.getLastPlayerLocation(args[0]);
+				if (loc != null) p.teleport(loc);
+
 				p.removePotionEffect(PotionEffectType.BLINDNESS);
 				p.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
-				double damage = Passky.damage.getOrDefault(p.getUniqueId(), 0D);
-				if (damage > 0D) p.damage(damage);
 				break;
 			}
 		}

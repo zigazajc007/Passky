@@ -20,7 +20,7 @@ public class Logout implements ICommand {
 		Player player = (Player) sender;
 		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
 
-		if(!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)){
+		if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("logout_login_first"));
 			return true;
 		}
@@ -28,14 +28,10 @@ public class Logout implements ICommand {
 		Passky.isLoggedIn.put(player.getUniqueId(), false);
 		Utils.removeSession(uuid);
 
-		if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
-			Utils.saveLastPlayerLocation(uuid, player.getLocation());
-			player.teleport(player.getWorld().getSpawnLocation());
-		}
+		Utils.saveLastPlayerLocation(uuid, player.getLocation());
+		player.teleport(player.getWorld().getSpawnLocation());
 
 		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
-
-		Utils.savePlayerDamage(player);
 
 		if (!Utils.isPlayerRegistered(uuid)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));

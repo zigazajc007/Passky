@@ -34,7 +34,6 @@ public class PlayerJoinListener implements Listener {
 
 		Passky.failures.put(e.getPlayer().getUniqueId(), 0);
 		Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), false);
-		Passky.damage.put(e.getPlayer().getUniqueId(), 0D);
 
 		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? e.getPlayer().getName() : e.getPlayer().getUniqueId().toString();
 
@@ -45,9 +44,6 @@ public class PlayerJoinListener implements Listener {
 					if (session.ip.equals(e.getPlayer().getAddress().getAddress().toString().replace("/", "")) && (session.date + Passky.getInstance().getConf().getInt("session_time", 30) * 60000L) > System.currentTimeMillis()) {
 						Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), true);
 						e.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
-						Utils.savePlayerDamage(e.getPlayer());
-						double damage = Passky.damage.getOrDefault(e.getPlayer().getUniqueId(), 0D);
-						if (damage > 0D) e.getPlayer().damage(damage);
 						e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
 					}
 				}
@@ -56,15 +52,11 @@ public class PlayerJoinListener implements Listener {
 
 		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
 
-			if(Passky.getInstance().getConf().getBoolean("location_protection", true)){
-				Location loc = Utils.getLastPlayerLocation(uuid);
-				if(loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
-				e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
-			}
+			Location loc = Utils.getLastPlayerLocation(uuid);
+			if (loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
+			e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
 
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
-
-			Utils.savePlayerDamage(e.getPlayer());
 
 			if (!Utils.isPlayerRegistered(uuid)) {
 				e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
