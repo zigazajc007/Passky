@@ -108,6 +108,8 @@ public final class Passky extends JavaPlugin {
 		new BlockBreakListener(this);
 		new PlayerLeaveListener(this);
 		new PlayerHungerListener(this);
+		new PlayerInteractListener(this);
+		new PlayerAttackListener(this);
 	}
 
 	public void setupPasswordFilter() {
