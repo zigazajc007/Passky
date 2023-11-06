@@ -28,8 +28,10 @@ public class Logout implements ICommand {
 		Passky.isLoggedIn.put(player.getUniqueId(), false);
 		Utils.removeSession(uuid);
 
-		Utils.saveLastPlayerLocation(uuid, player.getLocation());
-		player.teleport(player.getWorld().getSpawnLocation());
+		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+			Utils.saveLastPlayerLocation(uuid, player.getLocation());
+			player.teleport(player.getWorld().getSpawnLocation());
+		}
 
 		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
 

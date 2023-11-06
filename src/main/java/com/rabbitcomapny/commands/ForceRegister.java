@@ -45,8 +45,10 @@ public class ForceRegister implements ICommand {
 			if (p.getName().equals(args[0])) {
 				Passky.isLoggedIn.put(p.getUniqueId(), true);
 
-				Location loc = Utils.getLastPlayerLocation(args[0]);
-				if (loc != null) p.teleport(loc);
+				if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+					Location loc = Utils.getLastPlayerLocation(args[0]);
+					if (loc != null) p.teleport(loc);
+				}
 
 				p.removePotionEffect(PotionEffectType.BLINDNESS);
 				p.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));

@@ -49,8 +49,10 @@ public class Login implements ICommand {
 
 		Passky.isLoggedIn.put(player.getUniqueId(), true);
 
-		Location loc = Utils.getLastPlayerLocation(uuid);
-		if (loc != null) player.teleport(loc);
+		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+			Location loc = Utils.getLastPlayerLocation(uuid);
+			if (loc != null) player.teleport(loc);
+		}
 
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
 		player.resetTitle();

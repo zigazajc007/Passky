@@ -6,9 +6,13 @@
 #
 # Here you can change which encoder will your server use. You can use: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512 or null - for no encoder
 encoder: "SHA-256"
-# How many times the player can enter the wrong password before server kicks it
+# Do you want to teleport players back to their last location after successful login?
+teleport_player_last_location: true
+# Where should players who haven't logged in be sent? You can choose to always send them to the same world they were in the last time by using (null) as the option.
+spawn_world: null
+# How many incorrect password attempts can the player make before the server kicks them out?
 attempts: 5
-# How much time player have to log in before he gets kicked. Time is written in seconds.
+# What is the login timeout in seconds before players get kicked?
 time_before_kick: 30
 # Minimum characters for password
 min_password_length: 4
@@ -21,7 +25,7 @@ player_identifier: 0
 # Hiding the command log of the plugin command in console?
 # It will protect password
 hide_password: true
-# If you enable session, player won't need to log in every time he enters this server (Awesome feature for Bungeecord servers)
+# If you enable session, players won't need to log in every time they enter the server (Awesome feature for Bungeecord servers)
 session_enabled: true
 # How many minutes do you want session to last?
 session_time: 30

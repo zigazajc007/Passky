@@ -5,6 +5,7 @@ import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -52,9 +53,22 @@ public class PlayerJoinListener implements Listener {
 
 		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
 
-			Location loc = Utils.getLastPlayerLocation(uuid);
-			if (loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
-			e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+			if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+				Location loc = Utils.getLastPlayerLocation(uuid);
+				if (loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
+			}
+
+			String world = passky.getConf().getString("spawn_world", null);
+			if(world == null){
+				e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+			}else{
+				World custom_world = Bukkit.getServer().getWorld(world);
+				if(custom_world == null){
+					e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+				}else{
+					e.getPlayer().teleport(custom_world.getSpawnLocation());
+				}
+			}
 
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
 
