@@ -7,9 +7,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class PlayerCommandListener implements Listener {
 
 	private final Passky passky;
+	private final Set<String> allowedCommands = new HashSet<String>(){{
+		add("/register");
+		add("/login");
+		add("/reg");
+		add("/log");
+		add("/r");
+		add("/l");
+	}};
 
 	public PlayerCommandListener(Passky plugin) {
 		passky = plugin;
@@ -20,7 +31,8 @@ public class PlayerCommandListener implements Listener {
 	@EventHandler
 	public void onPlayerCommand(PlayerCommandPreprocessEvent e) {
 		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-			if (!e.getMessage().toLowerCase().startsWith("/login") && !e.getMessage().toLowerCase().startsWith("/register") && !e.getMessage().toLowerCase().startsWith("/log") && !e.getMessage().toLowerCase().startsWith("/reg") && !e.getMessage().toLowerCase().startsWith("/l") && !e.getMessage().toLowerCase().startsWith("/r")) {
+			String command = e.getMessage().toLowerCase().split(" ")[0];
+			if (!allowedCommands.contains(command)) {
 				e.setCancelled(true);
 
 				boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
