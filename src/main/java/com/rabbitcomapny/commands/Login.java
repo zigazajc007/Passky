@@ -1,8 +1,10 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.events.SuccessfulLoginEvent;
 import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,6 +59,7 @@ public class Login implements ICommand {
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
 		player.resetTitle();
 		player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
+		Bukkit.getPluginManager().callEvent(new SuccessfulLoginEvent(player));
 
 		if (Passky.getInstance().getConf().getBoolean("session_enabled", false)) {
 			if (player.getAddress() != null && player.getAddress().getAddress() != null)
