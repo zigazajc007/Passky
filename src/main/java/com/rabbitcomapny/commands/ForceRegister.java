@@ -29,7 +29,7 @@ public class ForceRegister implements ICommand {
 		boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
 
 		if(!usernames){
-			uuid = Bukkit.getOfflinePlayer(uuid).getUniqueId().toString();
+			if(uuid.length() != 36) uuid = Bukkit.getOfflinePlayer(uuid).getUniqueId().toString();
 		}
 
 		if (Utils.isPlayerRegistered(uuid)) {
