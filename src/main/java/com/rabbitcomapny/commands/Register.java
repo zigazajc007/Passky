@@ -1,7 +1,9 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.events.SuccessfulRegisterEvent;
 import com.rabbitcomapny.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -66,6 +68,7 @@ public class Register implements ICommand {
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
 		player.resetTitle();
 		player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_successfully"));
+		Bukkit.getPluginManager().callEvent(new SuccessfulRegisterEvent(player));
 
 		if (Passky.getInstance().getConf().getBoolean("session_enabled", false)) {
 			if (player.getAddress() != null && player.getAddress().getAddress() != null)

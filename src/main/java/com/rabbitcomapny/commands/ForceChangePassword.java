@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class ForceChangePassword implements ICommand {
 	@Override
@@ -19,34 +20,40 @@ public class ForceChangePassword implements ICommand {
 			return true;
 		}
 
-		boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
-		boolean isPlayerRegistered = usernames && Utils.isPlayerRegistered(args[0]);
+		String uuid = args[0];
+		String password = args[1];
 
-		if (!isPlayerRegistered) {
+		boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
+
+		if(!usernames){
+			uuid = Bukkit.getOfflinePlayer(uuid).getUniqueId().toString();
+		}
+
+		if (!Utils.isPlayerRegistered(uuid)) {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_changepass_register"));
 			return true;
 		}
 
-		if (args[1].length() > Integer.parseInt(Utils.getConfig("max_password_length"))) {
+		if (password.length() > Integer.parseInt(Utils.getConfig("max_password_length"))) {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_long"));
 			return true;
 		}
 
-		if (args[1].length() < Integer.parseInt(Utils.getConfig("min_password_length"))) {
+		if (password.length() < Integer.parseInt(Utils.getConfig("min_password_length"))) {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_too_short"));
 			return true;
 		}
 
-		Utils.changePassword(args[0], args[1]);
+		Utils.changePassword(uuid, password);
+		Utils.removeSession(uuid);
 
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getName().equals(args[0])) {
-				if (Passky.isLoggedIn.getOrDefault(p.getUniqueId(), false)) {
-					Utils.kickPlayer(p, Utils.getMessages("prefix") + Utils.getMessages("force_changepass_notice"));
-				}
-				break;
+		Player player = (usernames) ? Bukkit.getPlayer(uuid) : Bukkit.getPlayer(UUID.fromString(uuid));
+		if(player != null && player.isOnline()){
+			if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
+				Utils.kickPlayer(player, Utils.getMessages("prefix") + Utils.getMessages("force_changepass_notice"));
 			}
 		}
+
 		sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_changepass_successfully"));
 		return true;
 	}
