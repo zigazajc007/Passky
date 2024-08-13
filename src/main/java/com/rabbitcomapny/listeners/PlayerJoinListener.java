@@ -1,6 +1,7 @@
 package com.rabbitcomapny.listeners;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.events.SuccessfulLoginEvent;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
@@ -46,6 +47,7 @@ public class PlayerJoinListener implements Listener {
 						Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), true);
 						e.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
 						e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
+						Bukkit.getPluginManager().callEvent(new SuccessfulLoginEvent(e.getPlayer()));
 					}
 				}
 			}
@@ -88,5 +90,6 @@ public class PlayerJoinListener implements Listener {
 				}
 			}, Passky.getInstance().getConf().getInt("time_before_kick", 30) * 20L);
 		}
+
 	}
 }
