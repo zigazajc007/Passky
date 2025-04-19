@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -48,6 +49,22 @@ public final class Passky extends JavaPlugin {
 
 	public void onDisable() {
 		info("&4Disabling");
+
+		boolean shouldSaveLocations = Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true);
+
+		if (shouldSaveLocations) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				UUID uuid = player.getUniqueId();
+				if (Passky.isLoggedIn.getOrDefault(uuid, false)) {
+					String id = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0)
+						? player.getName()
+						: uuid.toString();
+
+					Utils.saveLastPlayerLocation(id, player.getLocation());
+				}
+			}
+		}
+
 		if (conn != null) {
 			try {
 				conn.close();
