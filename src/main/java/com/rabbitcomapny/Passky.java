@@ -1,5 +1,6 @@
 package com.rabbitcomapny;
 
+import com.rabbitcomapny.api.Identifier;
 import com.rabbitcomapny.commands.*;
 import com.rabbitcomapny.listeners.*;
 import com.rabbitcomapny.utils.Session;
@@ -29,8 +30,8 @@ public final class Passky extends JavaPlugin {
 
 	//Database
 	public static HikariDataSource hikari = null;
-	public static HashMap<UUID, Boolean> isLoggedIn = new HashMap<>();
-	public static HashMap<UUID, Integer> failures = new HashMap<>();
+	public static HashMap<String, Boolean> isLoggedIn = new HashMap<>();
+	public static HashMap<String, Integer> failures = new HashMap<>();
 	public static HashMap<String, Session> session = new HashMap<>();
 	public static String new_version = null;
 	private static Passky instance;
@@ -54,13 +55,9 @@ public final class Passky extends JavaPlugin {
 
 		if (shouldSaveLocations) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				UUID uuid = player.getUniqueId();
-				if (Passky.isLoggedIn.getOrDefault(uuid, false)) {
-					String id = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0)
-						? player.getName()
-						: uuid.toString();
-
-					Utils.saveLastPlayerLocation(id, player.getLocation());
+				Identifier identifier = new Identifier(player);
+				if (Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
+					Utils.saveLastPlayerLocation(identifier, player.getLocation());
 				}
 			}
 		}
@@ -111,6 +108,7 @@ public final class Passky extends JavaPlugin {
 		getCommand("changepassword").setExecutor(new Changepass());
 		getCommand("forcechangepassword").setExecutor(new ForceChangePassword());
 		getCommand("forceregister").setExecutor(new ForceRegister());
+		getCommand("forcelogin").setExecutor(new ForceLogin());
 
 		new PlayerJoinListener(this);
 		new PlayerMoveListener(this);

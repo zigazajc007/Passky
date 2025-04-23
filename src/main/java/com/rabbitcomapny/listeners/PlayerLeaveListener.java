@@ -1,6 +1,7 @@
 package com.rabbitcomapny.listeners;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -19,10 +20,9 @@ public class PlayerLeaveListener implements Listener {
 
 	@EventHandler
 	public void onPlayerLeave(final PlayerQuitEvent e) {
-		if (Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
-			String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? e.getPlayer().getName() : e.getPlayer().getUniqueId().toString();
+		if (Passky.isLoggedIn.getOrDefault(new Identifier(e.getPlayer()).toString(), false)) {
 			if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
-				Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
+				Utils.saveLastPlayerLocation(new Identifier(e.getPlayer()), e.getPlayer().getLocation());
 			}
 		}
 	}

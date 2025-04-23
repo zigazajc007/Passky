@@ -8,28 +8,33 @@ commands:
   login:
     usage: /<command>
     aliases: [ log, l ]
-    description: Login to your minecraft account
+    description: Login to your minecraft account.
   logout:
     usage: /<command>
-    description: Logout from your minecraft account
+    description: Log out of your Minecraft account.
   register:
     usage: /<command>
     aliases: [ reg, r ]
-    description: Register to your minecraft account
+    description: Register a new Minecraft account.
   changepassword:
     usage: /<command>
     aliases: [ changepass, cp ]
-    description: Change password for your minecraft account
+    description: Change your current Minecraft account password.
   forcechangepassword:
     usage: /<command>
-    aliases: [ forcechangepass,fcp, fp ]
+    aliases: [ forcechangepass, fcp, fp ]
     permission: passky.forcechangepassword
-    description: Forced change password for an player minecraft account
+    description: Force a password change for another player's account.
   forceregister:
     usage: /<command>
-    aliases: [ forceregister,fr ]
+    aliases: [ forcereg, fr ]
     permission: passky.forceregister
-    description: Forced register for an player minecraft account
+    description: Register an account for another player.
+  forcelogin:
+    usage: /<command>
+    aliases: [ forcelog, fl ]
+    permission: passky.forcelogin
+    description: Force log in a player without requiring a password.
 permissions:
   passky.forcechangepassword:
     default: op

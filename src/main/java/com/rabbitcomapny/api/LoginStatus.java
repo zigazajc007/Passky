@@ -1,0 +1,11 @@
+package com.rabbitcomapny.api;
+
+public enum LoginStatus {
+	SUCCESS,
+	ALREADY_LOGGED_IN,
+	NOT_REGISTERED,
+	WRONG_PASSWORD,
+	TOO_MANY_ATTEMPTS,
+	SYNTAX_ERROR,
+	UNKNOWN_ERROR
+}

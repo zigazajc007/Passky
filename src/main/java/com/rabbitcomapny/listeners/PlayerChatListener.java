@@ -1,6 +1,8 @@
 package com.rabbitcomapny.listeners;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
+import com.rabbitcomapny.api.PasskyAPI;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -19,13 +21,12 @@ public class PlayerChatListener implements Listener {
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
-		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+		Identifier identifier = new Identifier(e.getPlayer());
+
+		if (!Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 			e.setCancelled(true);
 
-			boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
-			boolean isPlayerRegistered = (usernames) ? Utils.isPlayerRegistered(e.getPlayer().getName()) : Utils.isPlayerRegistered(e.getPlayer().getUniqueId().toString());
-
-			if (!isPlayerRegistered) {
+			if (!PasskyAPI.isRegistered(identifier)) {
 				e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
 			} else {
 				e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_syntax"));

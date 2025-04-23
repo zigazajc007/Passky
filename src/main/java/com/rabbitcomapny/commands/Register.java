@@ -1,6 +1,7 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
 import com.rabbitcomapny.events.SuccessfulRegisterEvent;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
@@ -18,14 +19,14 @@ public class Register implements ICommand {
 		}
 
 		Player player = (Player) sender;
-		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
+		Identifier identifier = new Identifier(player);
 
-		if (Utils.isPlayerRegistered(uuid)) {
+		if (Utils.isPlayerRegistered(identifier)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_account_already"));
 			return true;
 		}
 
-		if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
+		if (Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_already"));
 			return true;
 		}
@@ -53,15 +54,15 @@ public class Register implements ICommand {
 		}
 
 		if (player.getAddress() != null && player.getAddress().getAddress() != null) {
-			Utils.savePassword(uuid, password, player.getAddress().getAddress().toString().replace("/", ""), String.valueOf(System.currentTimeMillis()));
+			Utils.savePassword(identifier, password, player.getAddress().getAddress().toString().replace("/", ""), String.valueOf(System.currentTimeMillis()));
 		} else {
-			Utils.savePassword(uuid, password, null, String.valueOf(System.currentTimeMillis()));
+			Utils.savePassword(identifier, password, null, String.valueOf(System.currentTimeMillis()));
 		}
 
-		Passky.isLoggedIn.put(player.getUniqueId(), true);
+		Passky.isLoggedIn.put(identifier.toString(), true);
 
 		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
-			Location loc = Utils.getLastPlayerLocation(uuid);
+			Location loc = Utils.getLastPlayerLocation(identifier);
 			if (loc != null) player.teleport(loc);
 		}
 
@@ -72,7 +73,7 @@ public class Register implements ICommand {
 
 		if (Passky.getInstance().getConf().getBoolean("session_enabled", false)) {
 			if (player.getAddress() != null && player.getAddress().getAddress() != null)
-				Utils.setSession(uuid, player.getAddress().getAddress().toString().replace("/", ""));
+				Utils.setSession(identifier, player.getAddress().getAddress().toString().replace("/", ""));
 		}
 
 		return true;

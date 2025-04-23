@@ -86,6 +86,14 @@ force_register_successfully: "&2Successfully registered."
 force_register_already: "&cPlayer is already registered! Please use /fcp <playerName> <newPassword> to change password!"
 force_register_syntax: "&cPlease use: /fr <playerName> <pass>"
 #----------------------------------------------------------
+#                   Force login
+#----------------------------------------------------------
+force_login_successfully: "&2Player was successfully logged-in."
+force_login_already: "&cPlayer is already logged-in!"
+force_login_not_registered: "&cPlayer need to register first!"
+force_login_player_offline: "&cYou can not force log-in offline player!"
+force_login_syntax: "&cPlease use: /fl <playerName>"
+#----------------------------------------------------------
 #                   Illegal username
 #----------------------------------------------------------
 illegal_username_kick: "&cYour username contains illegal characters!\nYou are only allowed to use characters from A-Z, 0-9 and _\nAlso make sure that you username is between 3-16 characters long."

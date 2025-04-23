@@ -6,12 +6,12 @@
 
     <groupId>com.rabbitcomapny</groupId>
     <artifactId>Passky</artifactId>
-    <version>2.5.0</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>Passky</name>
 
-    <description>Fastest login plugin</description>
+    <description>The best authentication plugin</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,6 +1,7 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
 import com.rabbitcomapny.events.SuccessfulLoginEvent;
 import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Utils;
@@ -19,15 +20,15 @@ public class Login implements ICommand {
 		}
 
 		Player player = (Player) sender;
-		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
-		Hash hash = Utils.getHash(uuid);
+		Identifier identifier = new Identifier(player);
+		Hash hash = Utils.getHash(identifier);
 
 		if (hash == null) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_register"));
 			return true;
 		}
 
-		if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
+		if (Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_already"));
 			return true;
 		}
@@ -39,9 +40,9 @@ public class Login implements ICommand {
 
 		Hash hash2 = new Hash(hash.algo, args[0], hash.salt, false);
 		if (!hash2.hash.equals(hash.hash)) {
-			int attempts = Passky.failures.merge(player.getUniqueId(), 1, Integer::sum);
+			int attempts = Passky.failures.merge(identifier.toString(), 1, Integer::sum);
 			if (attempts >= Passky.getInstance().getConf().getInt("attempts")) {
-				Passky.failures.put(player.getUniqueId(), 0);
+				Passky.failures.put(identifier.toString(), 0);
 				player.kickPlayer(Utils.getMessages("prefix") + Utils.getMessages("login_too_many_attempts"));
 				return true;
 			}
@@ -49,10 +50,10 @@ public class Login implements ICommand {
 			return true;
 		}
 
-		Passky.isLoggedIn.put(player.getUniqueId(), true);
+		Passky.isLoggedIn.put(identifier.toString(), true);
 
 		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
-			Location loc = Utils.getLastPlayerLocation(uuid);
+			Location loc = Utils.getLastPlayerLocation(identifier);
 			if (loc != null) player.teleport(loc);
 		}
 
@@ -63,7 +64,7 @@ public class Login implements ICommand {
 
 		if (Passky.getInstance().getConf().getBoolean("session_enabled", false)) {
 			if (player.getAddress() != null && player.getAddress().getAddress() != null)
-				Utils.setSession(uuid, player.getAddress().getAddress().toString().replace("/", ""));
+				Utils.setSession(identifier, player.getAddress().getAddress().toString().replace("/", ""));
 		}
 		return true;
 	}

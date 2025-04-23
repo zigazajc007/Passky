@@ -1,6 +1,7 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
 import com.rabbitcomapny.utils.Hash;
 import com.rabbitcomapny.utils.Utils;
 import org.bukkit.command.Command;
@@ -16,15 +17,15 @@ public class Changepass implements ICommand {
 		}
 
 		Player player = (Player) sender;
-		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? player.getName() : player.getUniqueId().toString();
-		Hash hash = Utils.getHash(uuid);
+		Identifier identifier = new Identifier(player);
+		Hash hash = Utils.getHash(identifier);
 
 		if (hash == null) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_register"));
 			return true;
 		}
 
-		if (!Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
+		if (!Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_login_first"));
 			return true;
 		}
@@ -57,7 +58,7 @@ public class Changepass implements ICommand {
 			return true;
 		}
 
-		Utils.changePassword(uuid, newPassword);
+		Utils.changePassword(identifier, newPassword);
 		player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("changepass_successfully"));
 		return true;
 	}

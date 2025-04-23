@@ -1,6 +1,8 @@
 package com.rabbitcomapny.listeners;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
+import com.rabbitcomapny.api.PasskyAPI;
 import com.rabbitcomapny.events.SuccessfulLoginEvent;
 import com.rabbitcomapny.utils.Session;
 import com.rabbitcomapny.utils.Utils;
@@ -34,17 +36,17 @@ public class PlayerJoinListener implements Listener {
 			}
 		}
 
-		Passky.failures.put(e.getPlayer().getUniqueId(), 0);
-		Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), false);
+		Identifier identifier = new Identifier(e.getPlayer());
 
-		String uuid = (Passky.getInstance().getConf().getInt("player_identifier", 0) == 0) ? e.getPlayer().getName() : e.getPlayer().getUniqueId().toString();
+		Passky.failures.put(identifier.toString(), 0);
+		Passky.isLoggedIn.put(identifier.toString(), false);
 
 		if (Passky.getInstance().getConf().getBoolean("session_enabled", false)) {
-			Session session = Utils.getSession(uuid);
+			Session session = Utils.getSession(identifier);
 			if (session != null) {
 				if (e.getPlayer().getAddress() != null && e.getPlayer().getAddress().getAddress() != null) {
 					if (session.ip.equals(e.getPlayer().getAddress().getAddress().toString().replace("/", "")) && (session.date + Passky.getInstance().getConf().getInt("session_time", 30) * 60000L) > System.currentTimeMillis()) {
-						Passky.isLoggedIn.put(e.getPlayer().getUniqueId(), true);
+						Passky.isLoggedIn.put(identifier.toString(), true);
 						e.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
 						e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("login_successfully"));
 						Bukkit.getPluginManager().callEvent(new SuccessfulLoginEvent(e.getPlayer()));
@@ -53,11 +55,11 @@ public class PlayerJoinListener implements Listener {
 			}
 		}
 
-		if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false)) {
+		if (!Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 
 			if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
-				Location loc = Utils.getLastPlayerLocation(uuid);
-				if (loc == null) Utils.saveLastPlayerLocation(uuid, e.getPlayer().getLocation());
+				Location loc = Utils.getLastPlayerLocation(identifier);
+				if (loc == null) Utils.saveLastPlayerLocation(identifier, e.getPlayer().getLocation());
 			}
 
 			String world = passky.getConf().getString("spawn_world", null);
@@ -74,7 +76,7 @@ public class PlayerJoinListener implements Listener {
 
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
 
-			if (!Utils.isPlayerRegistered(uuid)) {
+			if (!PasskyAPI.isRegistered(identifier)) {
 				e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
 				if (passky.getConf().getBoolean("titles_enabled", true))
 					e.getPlayer().sendTitle(Utils.chat(passky.getConf().getString("register_title", "&aRegister")), Utils.chat(passky.getConf().getString("register_subtitle", "&a/register <password> <password>")), 50, passky.getConf().getInt("time_before_kick", 30) * 20, 50);
@@ -85,7 +87,7 @@ public class PlayerJoinListener implements Listener {
 			}
 
 			Bukkit.getScheduler().runTaskLater(Passky.getInstance(), () -> {
-				if (!Passky.isLoggedIn.getOrDefault(e.getPlayer().getUniqueId(), false) && e.getPlayer().isOnline()) {
+				if (!Passky.isLoggedIn.getOrDefault(identifier.toString(), false) && e.getPlayer().isOnline()) {
 					Utils.kickPlayer(e.getPlayer(), Utils.getMessages("prefix") + Utils.getMessages("login_time").replace("{time}", Utils.getConfig("time_before_kick")));
 				}
 			}, Passky.getInstance().getConf().getInt("time_before_kick", 30) * 20L);

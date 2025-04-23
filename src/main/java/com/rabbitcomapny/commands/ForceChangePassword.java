@@ -1,15 +1,15 @@
 package com.rabbitcomapny.commands;
 
 import com.rabbitcomapny.Passky;
+import com.rabbitcomapny.api.Identifier;
+import com.rabbitcomapny.api.PasskyAPI;
 import com.rabbitcomapny.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class ForceChangePassword implements ICommand {
 	@Override
@@ -20,16 +20,10 @@ public class ForceChangePassword implements ICommand {
 			return true;
 		}
 
-		String uuid = args[0];
+		Identifier identifier = new Identifier(args[0]);
 		String password = args[1];
 
-		boolean usernames = Passky.getInstance().getConf().getInt("player_identifier", 0) == 0;
-
-		if(!usernames){
-			if(uuid.length() != 36) uuid = Bukkit.getOfflinePlayer(uuid).getUniqueId().toString();
-		}
-
-		if (!Utils.isPlayerRegistered(uuid)) {
+		if (!PasskyAPI.isRegistered(identifier)) {
 			sender.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("force_changepass_register"));
 			return true;
 		}
@@ -44,12 +38,12 @@ public class ForceChangePassword implements ICommand {
 			return true;
 		}
 
-		Utils.changePassword(uuid, password);
-		Utils.removeSession(uuid);
+		Utils.changePassword(identifier, password);
+		Utils.removeSession(identifier);
 
-		Player player = (usernames) ? Bukkit.getPlayer(uuid) : Bukkit.getPlayer(UUID.fromString(uuid));
+		Player player = identifier.getPlayer();
 		if(player != null && player.isOnline()){
-			if (Passky.isLoggedIn.getOrDefault(player.getUniqueId(), false)) {
+			if (Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 				Utils.kickPlayer(player, Utils.getMessages("prefix") + Utils.getMessages("force_changepass_notice"));
 			}
 		}
