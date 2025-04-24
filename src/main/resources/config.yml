@@ -6,6 +6,8 @@
 #
 # Here you can change which encoder will your server use. You can use: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512 or null - for no encoder
 encoder: "SHA-256"
+# Disabling teleportation will prevent Passky plugin from teleporting players in order to hide their location
+teleportation_enabled: true
 # Do you want to teleport players back to their last location after successful login?
 teleport_player_last_location: true
 # Where should players who haven't logged in be sent? You can choose to always send them to the same world they were in the last time by using (null) as the option.

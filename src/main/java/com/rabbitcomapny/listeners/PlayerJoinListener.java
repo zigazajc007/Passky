@@ -57,20 +57,22 @@ public class PlayerJoinListener implements Listener {
 
 		if (!Passky.isLoggedIn.getOrDefault(identifier.toString(), false)) {
 
-			if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
-				Location loc = Utils.getLastPlayerLocation(identifier);
-				if (loc == null) Utils.saveLastPlayerLocation(identifier, e.getPlayer().getLocation());
-			}
+			if(Passky.getInstance().getConf().getBoolean("teleportation_enabled", true)){
+				if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+					Location loc = Utils.getLastPlayerLocation(identifier);
+					if (loc == null) Utils.saveLastPlayerLocation(identifier, e.getPlayer().getLocation());
+				}
 
-			String world = passky.getConf().getString("spawn_world", null);
-			if(world == null){
-				e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
-			}else{
-				World custom_world = Bukkit.getServer().getWorld(world);
-				if(custom_world == null){
+				String world = passky.getConf().getString("spawn_world", null);
+				if(world == null){
 					e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
 				}else{
-					e.getPlayer().teleport(custom_world.getSpawnLocation());
+					World custom_world = Bukkit.getServer().getWorld(world);
+					if(custom_world == null){
+						e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+					}else{
+						e.getPlayer().teleport(custom_world.getSpawnLocation());
+					}
 				}
 			}
 

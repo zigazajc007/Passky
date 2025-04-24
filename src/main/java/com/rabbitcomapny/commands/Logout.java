@@ -29,7 +29,7 @@ public class Logout implements ICommand {
 		Passky.isLoggedIn.put(identifier.toString(), false);
 		Utils.removeSession(identifier);
 
-		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+		if(Passky.getInstance().getConf().getBoolean("teleportation_enabled", true) && Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
 			Utils.saveLastPlayerLocation(identifier, player.getLocation());
 			player.teleport(player.getWorld().getSpawnLocation());
 		}

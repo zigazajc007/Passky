@@ -52,7 +52,7 @@ public class Login implements ICommand {
 
 		Passky.isLoggedIn.put(identifier.toString(), true);
 
-		if(Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
+		if(Passky.getInstance().getConf().getBoolean("teleportation_enabled", true) && Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)){
 			Location loc = Utils.getLastPlayerLocation(identifier);
 			if (loc != null) player.teleport(loc);
 		}

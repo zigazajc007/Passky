@@ -64,7 +64,7 @@ public class PasskyAPI {
 		Passky.isLoggedIn.put(identifier.toString(), true);
 		Passky.failures.remove(identifier.toString());
 
-		if (Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)) {
+		if (Passky.getInstance().getConf().getBoolean("teleportation_enabled", true) && Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)) {
 			Location loc = Utils.getLastPlayerLocation(identifier);
 			if (loc != null) player.teleport(loc);
 		}
@@ -122,7 +122,7 @@ public class PasskyAPI {
 			if (player != null && player.isOnline()) {
 				Passky.isLoggedIn.put(identifier.toString(), true);
 
-				if (Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)) {
+				if (Passky.getInstance().getConf().getBoolean("teleportation_enabled", true) && Passky.getInstance().getConf().getBoolean("teleport_player_last_location", true)) {
 					Location loc = Utils.getLastPlayerLocation(identifier);
 					if (loc != null) player.teleport(loc);
 				}
