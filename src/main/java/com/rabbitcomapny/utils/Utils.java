@@ -151,6 +151,8 @@ public class Utils {
 	}
 
 	public static Session setSession(Identifier identifier, String ip) {
+		String identi = identifier.toString();
+
 		if (Passky.hikari != null) {
 			String query = "UPDATE passky_players SET ip = ?, date = ? WHERE uuid = ?;";
 			try {
@@ -158,7 +160,7 @@ public class Utils {
 				PreparedStatement ps = conn.prepareStatement(query);
 				ps.setString(1, ip);
 				ps.setString(2, String.valueOf(System.currentTimeMillis()));
-				ps.setString(3, identifier.toString());
+				ps.setString(3, identi);
 				ps.executeUpdate();
 				ps.close();
 				conn.close();
@@ -166,7 +168,14 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
-			return Passky.session.put(identifier.toString(), new Session(ip, System.currentTimeMillis()));
+			Session session = new Session(ip, System.currentTimeMillis());
+			if (Passky.getInstance().getConf().getBoolean("persist_session", false)){
+				Passky.getInstance().getPass().set(identi + ".ip", session.ip);
+				Passky.getInstance().getPass().set(identi + ".date", session.date);
+				Passky.getInstance().savePass();
+				return session;
+			}
+			return Passky.session.put(identi, session);
 		}
 		return null;
 	}
@@ -186,17 +195,23 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
+			if (Passky.getInstance().getConf().getBoolean("persist_session", false)){
+				Passky.getInstance().getPass().set(identifier.toString() + ".date", 0);
+				Passky.getInstance().savePass();
+			}
 			Passky.session.remove(identifier.toString());
 		}
 	}
 
 	public static Session getSession(Identifier identifier) {
+		String identi = identifier.toString();
+
 		if (Passky.hikari != null) {
 			String query = "SELECT ip, date FROM passky_players WHERE uuid = ?;";
 			try {
 				Connection conn = Passky.hikari.getConnection();
 				PreparedStatement ps = conn.prepareStatement(query);
-				ps.setString(1, identifier.toString());
+				ps.setString(1, identi);
 				ResultSet rs = ps.executeQuery();
 				if (rs.next()) {
 					String ip = rs.getString("ip");
@@ -213,7 +228,12 @@ public class Utils {
 				throwables.printStackTrace();
 			}
 		} else {
-			return Passky.session.getOrDefault(identifier.toString(), null);
+			if (Passky.getInstance().getConf().getBoolean("persist_session", false)){
+				String ip = Passky.getInstance().getPass().getString(identi + ".ip", "");
+				long date = Passky.getInstance().getPass().getLong(identi + ".date", 0);
+				return new Session(ip, date);
+			}
+			return Passky.session.getOrDefault(identi, null);
 		}
 		return null;
 	}
