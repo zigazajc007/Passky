@@ -125,6 +125,7 @@ public final class Passky extends JavaPlugin {
 		new PlayerHungerListener(this);
 		new PlayerInteractListener(this);
 		new PlayerAttackListener(this);
+		new EntityTargetListener(this);
 	}
 
 	public void setupPasswordFilter() {
