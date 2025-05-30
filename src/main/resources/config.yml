@@ -31,6 +31,10 @@ hide_password: true
 session_enabled: true
 # How many minutes do you want session to last?
 session_time: 30
+# Enable session persistence to file between server restarts
+# If true, session data will be saved and restored automatically
+# This setting is ignored if mysql: true
+persist_session: false
 # Do you want to enable titles and subtitles?
 titles_enabled: true
 # This title will show when player is required to login
