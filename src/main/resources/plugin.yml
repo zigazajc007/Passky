@@ -18,21 +18,21 @@ commands:
     description: Register a new Minecraft account.
   changepassword:
     usage: /<command>
-    aliases: [ changepass, cp ]
+    aliases: [ changepass ]
     description: Change your current Minecraft account password.
   forcechangepassword:
     usage: /<command>
-    aliases: [ forcechangepass, fcp, fp ]
+    aliases: [ forcechangepass ]
     permission: passky.forcechangepassword
     description: Force a password change for another player's account.
   forceregister:
     usage: /<command>
-    aliases: [ forcereg, fr ]
+    aliases: [ forcereg ]
     permission: passky.forceregister
     description: Register an account for another player.
   forcelogin:
     usage: /<command>
-    aliases: [ forcelog, fl ]
+    aliases: [ forcelog ]
     permission: passky.forcelogin
     description: Force log in a player without requiring a password.
 permissions:

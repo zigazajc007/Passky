@@ -12,16 +12,18 @@ Furthermore, Passky offers a comprehensive configuration file that allows you to
 
 <h3>Commands:</h3>
 <ul>
-	<li>login [log, l]
-	<li>register [reg, r]
+	<li>login [ log ]
+	<li>register [ reg ]
 	<li>logout
-	<li>changepassword [changepass, cp]
-	<li>forcechangepassword [forcechangepass, fcp, fp]
-	<li>forceregister [fr]
+	<li>changepassword [ changepass ]
+	<li>forcechangepassword [ forcechangepass ]
+	<li>forceregister [ forcereg ]
+	<li>forcelogin [ forcelog ]
 </ul>
 
 <h3>Permissions:</h3>
 <ul>
 	<li>passky.forcechangepassword
 	<li>passky.forceregister
+	<li>passky.forcelogin
 </ul>
