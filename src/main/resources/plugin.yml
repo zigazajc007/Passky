@@ -2,19 +2,19 @@ name: Passky
 version: ${project.version}
 main: com.rabbitcomapny.Passky
 api-version: 1.13
-authors: [ RabbitCompany,sandtechnology ]
+authors: [ RabbitCompany, sandtechnology ]
 description: The best authentication plugin
 commands:
   login:
     usage: /<command>
-    aliases: [ log, l ]
+    aliases: [ log ]
     description: Login to your minecraft account.
   logout:
     usage: /<command>
     description: Log out of your Minecraft account.
   register:
     usage: /<command>
-    aliases: [ reg, r ]
+    aliases: [ reg ]
     description: Register a new Minecraft account.
   changepassword:
     usage: /<command>
