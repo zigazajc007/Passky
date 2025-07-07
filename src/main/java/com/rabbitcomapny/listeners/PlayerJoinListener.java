@@ -9,6 +9,7 @@ import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -77,6 +78,13 @@ public class PlayerJoinListener implements Listener {
 			}
 
 			e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
+
+			if(e.getPlayer().isInsideVehicle()){
+				Entity vehicle = e.getPlayer().getVehicle();
+				if (vehicle != null) {
+					vehicle.eject();
+				}
+			}
 
 			if (!PasskyAPI.isRegistered(identifier)) {
 				e.getPlayer().sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));

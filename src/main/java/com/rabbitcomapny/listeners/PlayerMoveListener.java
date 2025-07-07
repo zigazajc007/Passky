@@ -9,11 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerMoveListener implements Listener {
 
-	private final Passky passky;
-
 	public PlayerMoveListener(Passky plugin) {
-		passky = plugin;
-
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 

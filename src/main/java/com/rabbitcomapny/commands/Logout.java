@@ -6,6 +6,7 @@ import com.rabbitcomapny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -35,6 +36,11 @@ public class Logout implements ICommand {
 		}
 
 		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2147483647, 1));
+
+		if(player.isInsideVehicle()){
+			Entity vehicle = player.getVehicle();
+			if (vehicle != null) vehicle.eject();
+		}
 
 		if (!Utils.isPlayerRegistered(identifier)) {
 			player.sendMessage(Utils.getMessages("prefix") + Utils.getMessages("register_syntax"));
