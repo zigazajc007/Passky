@@ -301,6 +301,7 @@ public final class Passky extends JavaPlugin {
 			hikari.setPassword(getConf().getString("mysql_password"));
 			hikari.addDataSourceProperty("useSSL", getConf().getString("mysql_useSSL", "false"));
 			hikari.addDataSourceProperty("cachePrepStmts", "true");
+			hikari.addDataSourceProperty("allowPublicKeyRetrieval", getConf().getString("mysql_allowPublicKeyRetrieval", "true"));
 			hikari.addDataSourceProperty("prepStmtCacheSize", "250");
 			hikari.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 			hikari.setConnectionTimeout(10000);
